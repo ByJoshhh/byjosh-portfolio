@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ByJosh — Professional Graphic Designer specializing in anime, gaming, and digital art. Available for freelance work.">
+  <meta name="keywords" content="graphic design, freelance designer, anime art, gaming thumbnails, digital art, ByJosh, Josh EMM">
+  <meta name="author" content="Josh EMM.">
+  <meta property="og:title" content="ByJosh | Graphic Designer & Digital Artist">
+  <meta property="og:description" content="Creating stunning visuals for gaming, anime, and digital content. Available for freelance.">
+  <meta property="og:image" content="/images/Banners/ByJosh-Banner.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <title>ByJosh | Graphic Designer &amp; Digital Artist</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="preload" href="/images/haimiya.gif" as="image">
+</head>
+<body>
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scroll-progress"></div>
+  
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+  <div class="cursor-outline" id="cursor-outline" aria-hidden="true"></div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <div class="lightbox-close" id="lightbox-close">&times;</div>
+    <img id="lightbox-img" src="" alt="Full Size Project">
+  </div>
+
+  <!-- Success Modal -->
+  <div id="success-modal" class="success-modal" aria-hidden="true">
+    <div class="success-modal__content">
+      <div class="success-icon">
+        <svg viewBox="0 0 52 52">
+          <circle class="success-icon__circle" cx="26" cy="26" r="25" fill="none"/>
+          <path class="success-icon__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+      </div>
+      <h3 class="lang-en">Message Sent!</h3><h3 class="lang-es">¡Mensaje Enviado!</h3>
+      <p class="lang-en">Thanks for reaching out. I'll get back to you soon.</p>
+      <p class="lang-es">Gracias por contactarme. Te responderé pronto.</p>
+      <button class="btn btn--primary" id="success-close">
+        <span class="lang-en">Awesome</span><span class="lang-es">Genial</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="sakura-container" aria-hidden="true"></div>
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+  <img src="/images/sakura.png" alt="" class="sakura-tree-bg" aria-hidden="true">
+
+  <nav id="navbar" aria-label="Main navigation"></nav>
+
+  <main>
+    <section id="hero" class="hero"></section>
+    <section id="about" class="about"></section>
+    <section id="projects" class="projects"></section>
+    <section id="services" class="services"></section>
+    <section id="pricing" class="pricing" style="padding: 80px 0;"></section>
+    <section id="faq" class="faq" style="padding: 40px 0 80px 0;"></section>
+    <section id="contact" class="contact"></section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
