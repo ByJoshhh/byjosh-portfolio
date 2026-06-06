@@ -20,7 +20,38 @@ import { initContact } from './sections/contact.js';
 import { initAnimations, initSmoothScroll } from './utils/animations.js';
 import { animateCounters } from './utils/counter.js';
 
+// --- Preloader Logic ---
+function initPreloader() {
+  const preloader = document.getElementById('preloader');
+  const bar = document.getElementById('preloader-bar');
+  const text = document.getElementById('preloader-text');
+  
+  if (!preloader || !bar || !text) return;
+
+  let progress = 0;
+  // Fake progress up to 90%
+  const fakeLoader = setInterval(() => {
+    progress += Math.random() * 10;
+    if (progress > 90) progress = 90;
+    
+    bar.style.width = `${progress}%`;
+    text.innerText = `${Math.floor(progress)}%`;
+  }, 150);
+
+  // When all images and resources actually finish loading
+  window.addEventListener('load', () => {
+    clearInterval(fakeLoader);
+    bar.style.width = '100%';
+    text.innerText = '100%';
+    
+    setTimeout(() => {
+      preloader.classList.add('fade-out');
+    }, 400); // small delay to let user see 100%
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+  initPreloader();
   // 1 — Components
   initNavbar();
   initFooter();
