@@ -556,9 +556,7 @@ body.lang-es .lang-en { display: none !important; }
 }
 .navbar.scrolled {
   padding: 14px 0;
-  background: rgba(11, 13, 20, 0.8);
-  backdrop-filter: blur(16px) saturate(1.4);
-  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  background: rgba(11, 13, 20, 0.96);
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -1518,7 +1516,6 @@ body.lang-es .lang-en { display: none !important; }
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--transition-base);
-  backdrop-filter: blur(8px);
 }
 
 .success-modal.active {
