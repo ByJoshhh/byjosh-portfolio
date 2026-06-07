@@ -46,12 +46,24 @@ function initPreloader() {
     
     setTimeout(() => {
       preloader.classList.add('fade-out');
+      document.body.classList.add('loaded');
+      
+      // Start intersection animations and counters only after preloader is done
+      initAnimations();
+      animateCounters();
     }, 400); // small delay to let user see 100%
   });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   initPreloader();
+  // 5 — Prevent Image Theft
+  document.addEventListener('contextmenu', (e) => {
+    if (e.target.closest('.project-card') || e.target.closest('.lightbox')) {
+      e.preventDefault();
+    }
+  });
+  
   // 1 — Components
   initNavbar();
   initFooter();
@@ -68,8 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initFaq();
   initContact();
 
-  // 3 — Utilities (must run after sections are rendered)
-  initAnimations();
+  // 3 — Utilities
   initSmoothScroll();
-  animateCounters();
 });

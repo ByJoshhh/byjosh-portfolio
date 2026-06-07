@@ -401,6 +401,10 @@ ul, ol {
   animation: revealTextAnim 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
+body:not(.loaded) .reveal-text__inner {
+  animation-play-state: paused;
+}
+
 @keyframes revealTextAnim {
   0% { transform: translateY(100%); opacity: 0; }
   100% { transform: translateY(0); opacity: 1; }
@@ -641,7 +645,7 @@ body.lang-es .lang-en { display: none !important; }
   display: flex;
   align-items: center;
   z-index: 1;
-  padding: 0 var(--container-padding);
+  padding: 120px var(--container-padding) 120px;
 }
 
 .hero__container {
@@ -968,9 +972,6 @@ body.lang-es .lang-en { display: none !important; }
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 24px;
-  /* Let browser skip rendering off-screen cards */
-  content-visibility: auto;
-  contain-intrinsic-size: auto 500px;
 }
 
 .project-card {
@@ -978,11 +979,10 @@ body.lang-es .lang-en { display: none !important; }
   border-radius: var(--radius-lg);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   overflow: hidden;
-  border: 2px solid transparent;
-  transition: opacity 0.3s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 .project-card:hover {
-  border-color: var(--accent-primary);
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(79, 195, 247, 0.2);
 }
@@ -993,6 +993,10 @@ body.lang-es .lang-en { display: none !important; }
   position: relative;
   background-size: cover;
   background-position: center;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
 }
 .project-card__image img {
   display: block;
@@ -1000,6 +1004,9 @@ body.lang-es .lang-en { display: none !important; }
   height: 100%;
   object-fit: cover;
   transition: transform 0.6s ease;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 .project-card:hover .project-card__image img {
   transform: scale(1.05);
@@ -1014,10 +1021,14 @@ body.lang-es .lang-en { display: none !important; }
   justify-content: flex-end;
   padding: 22px;
   opacity: 0;
-  transition: opacity var(--transition-base);
+  transition: opacity var(--transition-base), border-color 0.3s ease;
+  border-radius: var(--radius-lg);
+  border: 2px solid transparent;
+  pointer-events: none;
 }
 .project-card:hover .project-card__overlay {
   opacity: 1;
+  border-color: var(--accent-primary);
 }
 
 .project-card__title {
