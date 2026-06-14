@@ -35,6 +35,8 @@ export function initProjects() {
     { title: 'Zodiac', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ZODIAC-sunix.png', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
     { title: 'GD Grief', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-grief.png', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
     { title: 'GD River', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-river.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Aftermath', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aftermath.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Waterfall', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/WATERFALL-THUMBNAIL.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
 
     { title: 'Violet Evergarden', cat: 'featured,headers', img: '/images/Headers/violet-evergarden-header.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
     { title: '86 Header', cat: 'headers', img: '/images/Headers/86.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
