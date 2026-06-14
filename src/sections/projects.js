@@ -133,7 +133,9 @@ export function initProjects() {
             return `
           <div class="project-card card-spawn" data-categories="${p.cat}">
             <div class="project-card__image" style="background:${p.bg}">
+              <div class="skeleton-loader"></div>
               <img ${imgAttr} alt="${p.title}" loading="lazy" decoding="async"
+                   onload="this.classList.add('loaded')"
                    onerror="this.closest('.project-card').style.display='none'">
             </div>
             <div class="project-card__overlay">
