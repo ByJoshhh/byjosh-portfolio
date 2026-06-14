@@ -126,7 +126,7 @@ export function initProjects() {
             (p) => `
           <div class="project-card card-spawn" data-categories="${p.cat}">
             <div class="project-card__image" style="background:${p.bg}">
-              <img src="${p.img}" alt="${p.title}" decoding="async"
+              <img src="${p.img}" alt="${p.title}" loading="lazy" decoding="async"
                    onerror="this.closest('.project-card').style.display='none'">
             </div>
             <div class="project-card__overlay">
@@ -181,6 +181,7 @@ export function initProjects() {
         const cats = card.dataset.categories.split(',');
         const show = f === 'all' || cats.includes(f);
         if (show) {
+          card.style.display = 'block';
           card.style.position = '';
           card.style.visibility = '';
           card.style.height = '';
@@ -195,6 +196,7 @@ export function initProjects() {
           card.style.transform = 'scale(0.8)';
           setTimeout(() => {
             if (card.style.opacity === '0') {
+              card.style.display = 'none';
               card.style.position = 'absolute';
               card.style.visibility = 'hidden';
               card.style.height = '0';
@@ -209,10 +211,12 @@ export function initProjects() {
 
   const featuredBtn = section.querySelector('[data-filter="featured"]');
   if (featuredBtn) {
-    // Initial setup to only show featured projects — use visibility so images still load
+    // Initial setup to only show featured projects. 
+    // We use display: none so the browser respects loading="lazy" and doesn't download 270MB of images at once.
     cards.forEach((card) => {
       const cats = card.dataset.categories.split(',');
       if (!cats.includes('featured')) {
+        card.style.display = 'none';
         card.style.position = 'absolute';
         card.style.visibility = 'hidden';
         card.style.height = '0';
