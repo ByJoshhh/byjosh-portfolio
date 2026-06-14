@@ -1,5 +1,5 @@
-/**
- * Projects gallery — updated with cool-toned gradients.
+﻿/**
+ * Projects gallery â€” updated with cool-toned gradients.
  */
 import { scrollObserver } from '../utils/animations.js';
 export function initProjects() {
@@ -7,97 +7,97 @@ export function initProjects() {
   if (!section) return;
 
   const data = [
-    { title: 'Acheron', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron.jpg', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
-    { title: 'Acheron Variant', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ACHERON-THUMBNAIL1.png', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'Aegleseeker', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aegleseeker.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Aftermath', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aftermath.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'ASTR1D Rework', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ASTR1D-rework.png', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'Black Blizzard Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Black-Blizzard(old).png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Black Blizzard', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Black-Blizzard.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Bloodlust', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Bloodlust.jpg', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'Cosmic Cyclone', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Cosmic-Cyclone.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Crimson Clutter', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Crimson-Clutter.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Digital Descent', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/DigitalDescent.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'GD Grief', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-grief.png', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'GD River', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-river.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Nhelv Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Nhelv(old).jpg', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Nhelv 4k', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Nhelv-4k.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Night Rider', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Night-Rider.png', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
-    { title: 'Ouroboros', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Ouroboros.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Proto Flicker', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/PROTO-FLICKER.png', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'Retitled', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Retitled.jpg', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Sonic Wave', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/SonicWave.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Spectrum Cyclone', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Spectrum-Cyclone.jpg', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'Sunix TP2', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-TP2-iconpacks.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Tartarus Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Tartarusold.jpg', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Tartarus', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Tartarus-Sunix-cc.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'The Golden', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/TheGolden.png', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'The Grief', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/THE-GRIEF.png', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
-    { title: 'The Ultimate Phase', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/TheUltimatePhase.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Wasureta', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Wasureta01.png', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Waterfall', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/WATERFALL-THUMBNAIL.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Zodiac', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ZODIAC-sunix.png', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Acheron', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
+    { title: 'Acheron Variant', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ACHERON-THUMBNAIL1.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Aegleseeker', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aegleseeker.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Aftermath', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aftermath.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'ASTR1D Rework', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ASTR1D-rework.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'Black Blizzard Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Black-Blizzard(old).webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Black Blizzard', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Black-Blizzard.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Bloodlust', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Bloodlust.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'Cosmic Cyclone', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Cosmic-Cyclone.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Crimson Clutter', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Crimson-Clutter.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Digital Descent', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/DigitalDescent.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'GD Grief', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-grief.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'GD River', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-river.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Nhelv Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Nhelv(old).webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Nhelv 4k', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Nhelv-4k.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Night Rider', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Night-Rider.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
+    { title: 'Ouroboros', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Ouroboros.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Proto Flicker', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/PROTO-FLICKER.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Retitled', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Retitled.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Sonic Wave', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/SonicWave.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Spectrum Cyclone', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Spectrum-Cyclone.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'Sunix TP2', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-TP2-iconpacks.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Tartarus Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Tartarusold.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Tartarus', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Tartarus-Sunix-cc.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'The Golden', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/TheGolden.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'The Grief', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/THE-GRIEF.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
+    { title: 'The Ultimate Phase', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/TheUltimatePhase.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Wasureta', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Wasureta01.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Waterfall', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/WATERFALL-THUMBNAIL.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Zodiac', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ZODIAC-sunix.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
 
-    { title: 'Violet Evergarden', cat: 'featured,headers', img: '/images/Headers/violet-evergarden-header.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: '86 Header', cat: 'headers', img: '/images/Headers/86.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Alezitah', cat: 'headers', img: '/images/Headers/ALEZITAH.png', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Danganronpa Phobos', cat: 'headers', img: '/images/Headers/Danganronpa-Phobos.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Gravity Falls', cat: 'headers', img: '/images/Headers/Gravity-Falls.jpg', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Arknights', cat: 'headers', img: '/images/Headers/Arknights.jpg', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Genshin Impact', cat: 'headers', img: '/images/Headers/Genshin-Impact.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Hu Tao', cat: 'headers', img: '/images/Headers/HuTao.jpg', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'Lynarmint Oshi No Ko', cat: 'headers', img: '/images/Headers/Lynarmint-OshiNoKo.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Necrum', cat: 'headers', img: '/images/Headers/Necrum-HEADER.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Rimuru Tempest', cat: 'headers', img: '/images/Headers/Rimuru%20Tempest.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Selene Mirai Nikki', cat: 'headers', img: '/images/Headers/Selene-MiraiNikki.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Silexx', cat: 'featured,headers', img: '/images/Headers/Silexx-t.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Violet Evergarden', cat: 'featured,headers', img: '/images/Headers/violet-evergarden-header.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: '86 Header', cat: 'headers', img: '/images/Headers/86.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Alezitah', cat: 'headers', img: '/images/Headers/ALEZITAH.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Danganronpa Phobos', cat: 'headers', img: '/images/Headers/Danganronpa-Phobos.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Gravity Falls', cat: 'headers', img: '/images/Headers/Gravity-Falls.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Arknights', cat: 'headers', img: '/images/Headers/Arknights.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Genshin Impact', cat: 'headers', img: '/images/Headers/Genshin-Impact.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Hu Tao', cat: 'headers', img: '/images/Headers/HuTao.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'Lynarmint Oshi No Ko', cat: 'headers', img: '/images/Headers/Lynarmint-OshiNoKo.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Necrum', cat: 'headers', img: '/images/Headers/Necrum-HEADER.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Rimuru Tempest', cat: 'headers', img: '/images/Headers/Rimuru%20Tempest.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Selene Mirai Nikki', cat: 'headers', img: '/images/Headers/Selene-MiraiNikki.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Silexx', cat: 'featured,headers', img: '/images/Headers/Silexx-t.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
     { title: 'Steins Gate', cat: 'headers', img: '/images/Headers/Steins;Gate.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'Frostpunk Mystic', cat: 'headers', img: '/images/Headers/frostpunk-dual-mysticGFX.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'The Ahiyu', cat: 'headers', img: '/images/Headers/The-Ahiyu.jpg', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Frostpunk Mystic', cat: 'headers', img: '/images/Headers/frostpunk-dual-mysticGFX.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'The Ahiyu', cat: 'headers', img: '/images/Headers/The-Ahiyu.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
     { title: 'Vrapur DUAL Danganronpa', cat: 'headers', img: '/images/Headers/Vrapur-DUAL-Danganronpa.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Yoru', cat: 'headers', img: '/images/Headers/yoru-header.jpg', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: '144p Header', cat: 'headers', img: '/images/Headers/144p-header.jpg', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'Call Of The Night', cat: 'headers', img: '/images/Headers/Call-Of-The-Night.jpg', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Ganyu Header', cat: 'headers', img: '/images/Headers/Ganyu.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Happy Sugar Life', cat: 'headers', img: '/images/Headers/Happy-Sugar-Life.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Yoru', cat: 'headers', img: '/images/Headers/yoru-header.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: '144p Header', cat: 'headers', img: '/images/Headers/144p-header.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Call Of The Night', cat: 'headers', img: '/images/Headers/Call-Of-The-Night.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Ganyu Header', cat: 'headers', img: '/images/Headers/Ganyu.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Happy Sugar Life', cat: 'headers', img: '/images/Headers/Happy-Sugar-Life.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
 
-    { title: 'Chisato Banner', cat: 'featured,banners', img: '/images/Banners/Chisato-Banner-CC-2.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Chizuru Banner', cat: 'banners', img: '/images/Banners/Chizuru-Banner.png', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Ryexus Banner', cat: 'banners', img: '/images/Banners/Ryexus-Banner.jpg', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'FoxBro Banner', cat: 'banners', img: '/images/Banners/FoxBro-Bannerjpg.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'GD Avi', cat: 'pfps', img: '/images/AVIS/GDavi1.jpg', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Steins PFP', cat: 'pfps', img: '/images/AVIS/Steins;PFP.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Oshi No Ko Avi', cat: 'pfps', img: '/images/AVIS/oshinoko.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Sakura Avi', cat: 'pfps', img: '/images/AVIS/SakuraAVI.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Chisato Avi', cat: 'featured,pfps', img: '/images/AVIS/ChisatoAVI.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Chisato Banner', cat: 'featured,banners', img: '/images/Banners/Chisato-Banner-CC-2.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Chizuru Banner', cat: 'banners', img: '/images/Banners/Chizuru-Banner.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Ryexus Banner', cat: 'banners', img: '/images/Banners/Ryexus-Banner.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'FoxBro Banner', cat: 'banners', img: '/images/Banners/FoxBro-Bannerjpg.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'GD Avi', cat: 'pfps', img: '/images/AVIS/GDavi1.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Steins PFP', cat: 'pfps', img: '/images/AVIS/Steins;PFP.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Oshi No Ko Avi', cat: 'pfps', img: '/images/AVIS/oshinoko.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Sakura Avi', cat: 'pfps', img: '/images/AVIS/SakuraAVI.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Chisato Avi', cat: 'featured,pfps', img: '/images/AVIS/ChisatoAVI.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
     { title: 'Siesta Avi', cat: 'pfps', img: '/images/AVIS/Siesta-The-Detective-Is-Dead.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
     { title: 'Recoil Chisato Avi', cat: 'pfps', img: '/images/AVIS/Recoil-Chisato-AVI.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
 
-    { title: 'Kroh Banner', cat: 'banners', img: '/images/Banners/Kroh-2.png', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'Kroh Banner 1', cat: 'banners', img: '/images/Banners/Kroh-1.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'ByJosh Banner', cat: 'featured,banners', img: '/images/Banners/ByJosh-Banner.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Mitaka Asa', cat: 'banners', img: '/images/Banners/Mitaka-Asa.png', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'SpaceUK Banner', cat: 'banners', img: '/images/Banners/SpaceUK-banner.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Ganyu Banner', cat: 'banners', img: '/images/Banners/ganyu-banner.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Evernight Finished', cat: 'banners', img: '/images/Banners/evernight-finished.png', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Andere Banner', cat: 'banners', img: '/images/Banners/Andere-Banner.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Changli Wuthering Waves', cat: 'banners', img: '/images/Banners/Changli-Wuthering-Waves.jpg', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'Chiaki Nanami', cat: 'banners', img: '/images/Banners/Chiaki-Nanami-Banner.jpg', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Mushoku Tensei', cat: 'banners', img: '/images/Banners/Mushoku-Tensei.jpg', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: 'One Punch Saitama', cat: 'banners', img: '/images/Banners/One-Punch-Saitama.jpg', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Sunix Banner', cat: 'banners', img: '/images/Banners/Sunix-Banner-Oficial-Channel-2-K.png', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'Shikimori San', cat: 'banners', img: '/images/Banners/kawaii-dake-ja-nai-shikimori-san.png', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Kroh Banner', cat: 'banners', img: '/images/Banners/Kroh-2.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'Kroh Banner 1', cat: 'banners', img: '/images/Banners/Kroh-1.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'ByJosh Banner', cat: 'featured,banners', img: '/images/Banners/ByJosh-Banner.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Mitaka Asa', cat: 'banners', img: '/images/Banners/Mitaka-Asa.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'SpaceUK Banner', cat: 'banners', img: '/images/Banners/SpaceUK-banner.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Ganyu Banner', cat: 'banners', img: '/images/Banners/ganyu-banner.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Evernight Finished', cat: 'banners', img: '/images/Banners/evernight-finished.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Andere Banner', cat: 'banners', img: '/images/Banners/Andere-Banner.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Changli Wuthering Waves', cat: 'banners', img: '/images/Banners/Changli-Wuthering-Waves.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Chiaki Nanami', cat: 'banners', img: '/images/Banners/Chiaki-Nanami-Banner.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Mushoku Tensei', cat: 'banners', img: '/images/Banners/Mushoku-Tensei.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: 'One Punch Saitama', cat: 'banners', img: '/images/Banners/One-Punch-Saitama.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Sunix Banner', cat: 'banners', img: '/images/Banners/Sunix-Banner-Oficial-Channel-2-K.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Shikimori San', cat: 'banners', img: '/images/Banners/kawaii-dake-ja-nai-shikimori-san.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
 
-    { title: 'Pury Team', cat: 'discord-banners', img: '/images/Discord%20Banners/PURY-TEAM.png', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Pury Team', cat: 'discord-banners', img: '/images/Discord%20Banners/PURY-TEAM.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
 
-    { title: 'Calex', cat: 'anime-backgrounds', img: '/images/Anime-Backgrounds/CALEXBG.png', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' }
+    { title: 'Calex', cat: 'anime-backgrounds', img: '/images/Anime-Backgrounds/CALEXBG.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' }
   ];
 
   const getCategoryLabel = (cat) => {
-    if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">Diseño de Miniaturas</span>';
-    if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">Diseño de Header</span>';
+    if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">DiseÃ±o de Miniaturas</span>';
+    if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">DiseÃ±o de Header</span>';
     if (cat.includes('discord-banners')) return '<span class="lang-en">Discord Banner</span><span class="lang-es">Banner de Discord</span>';
-    if (cat.includes('banners')) return '<span class="lang-en">Banner Design</span><span class="lang-es">Diseño de Banner</span>';
+    if (cat.includes('banners')) return '<span class="lang-en">Banner Design</span><span class="lang-es">DiseÃ±o de Banner</span>';
     if (cat.includes('pfps')) return '<span class="lang-en">Avatar / PFP</span><span class="lang-es">Avatar / PFP</span>';
     if (cat.includes('anime-backgrounds')) return '<span class="lang-en">Anime Background</span><span class="lang-es">Fondo de Anime</span>';
     return '<span class="lang-en">Digital Art</span><span class="lang-es">Arte Digital</span>';
@@ -132,7 +132,7 @@ export function initProjects() {
             <div class="project-card__overlay">
               <h3 class="project-card__title">${p.title}</h3>
               <p class="project-card__category">${getCategoryLabel(p.cat)}</p>
-              <span class="project-card__link"><span class="lang-en">View Full Size</span><span class="lang-es">Ver en Grande</span> →</span>
+              <span class="project-card__link"><span class="lang-en">View Full Size</span><span class="lang-es">Ver en Grande</span> â†’</span>
             </div>
           </div>`
           )
@@ -267,3 +267,4 @@ export function initProjects() {
     });
   }
 }
+
