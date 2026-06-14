@@ -165,13 +165,23 @@ export function initProjects() {
   const lbImg = document.getElementById('lightbox-img');
   const closeLb = document.getElementById('lightbox-close');
 
-  // Helper: ensure an img's data-src is swapped to src before using it
+  // Swap data-src → src only when a card enters the viewport
   function loadImg(img) {
     if (img && img.dataset.src) {
       img.src = img.dataset.src;
       delete img.dataset.src;
     }
   }
+
+  // IntersectionObserver: loads image only when card is ~200px from entering view
+  const imgObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        loadImg(entry.target.querySelector('img'));
+        imgObserver.unobserve(entry.target);
+      }
+    });
+  }, { rootMargin: '200px 0px' });
 
   if (lightbox && lbImg && closeLb) {
     cards.forEach((card) => {
@@ -198,18 +208,13 @@ export function initProjects() {
         const cats = card.dataset.categories.split(',');
         const show = f === 'all' || cats.includes(f);
         if (show) {
-          // Swap data-src → src so the browser actually downloads the image
-          loadImg(card.querySelector('img'));
           card.style.display = 'block';
-          card.style.position = '';
-          card.style.visibility = '';
-          card.style.height = '';
-          card.style.overflow = '';
-          card.style.margin = '';
           // trigger reflow so transition plays
           void card.offsetWidth;
           card.style.opacity = '1';
           card.style.transform = 'scale(1)';
+          // Start observing so image loads when it scrolls into view
+          imgObserver.observe(card);
         } else {
           card.style.opacity = '0';
           card.style.transform = 'scale(0.8)';
@@ -225,11 +230,13 @@ export function initProjects() {
 
   const featuredBtn = section.querySelector('[data-filter="featured"]');
   if (featuredBtn) {
-    // Initial setup to only show featured projects. 
-    // We use display: none so the browser respects loading="lazy" and doesn't download 270MB of images at once.
     cards.forEach((card) => {
       const cats = card.dataset.categories.split(',');
-      if (!cats.includes('featured')) {
+      if (cats.includes('featured')) {
+        // Featured cards are visible — observe so image loads as it scrolls into view
+        imgObserver.observe(card);
+      } else {
+        // Non-featured cards start hidden
         card.style.display = 'none';
         card.style.opacity = '0';
         card.style.transform = 'scale(0.8)';
