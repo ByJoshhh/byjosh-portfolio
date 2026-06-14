@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Projects gallery â€” updated with cool-toned gradients.
  */
 import { scrollObserver } from '../utils/animations.js';
@@ -123,18 +123,26 @@ export function initProjects() {
       <div class="projects__grid">
         ${data
           .map(
-            (p) => `
+            (p) => {
+            // Featured images load immediately; others use data-src so
+            // the browser doesn't download them until the user opens that tab.
+            const isFeatured = p.cat.includes('featured');
+            const imgAttr = isFeatured
+              ? `src="${p.img}"`
+              : `data-src="${p.img}"`;
+            return `
           <div class="project-card card-spawn" data-categories="${p.cat}">
             <div class="project-card__image" style="background:${p.bg}">
-              <img src="${p.img}" alt="${p.title}" loading="lazy" decoding="async"
+              <img ${imgAttr} alt="${p.title}" loading="lazy" decoding="async"
                    onerror="this.closest('.project-card').style.display='none'">
             </div>
             <div class="project-card__overlay">
               <h3 class="project-card__title">${p.title}</h3>
               <p class="project-card__category">${getCategoryLabel(p.cat)}</p>
-              <span class="project-card__link"><span class="lang-en">View Full Size</span><span class="lang-es">Ver en Grande</span> â†’</span>
+              <span class="project-card__link"><span class="lang-en">View Full Size</span><span class="lang-es">Ver en Grande</span> →</span>
             </div>
-          </div>`
+          </div>`;
+          }
           )
           .join('')}
       </div>
@@ -157,11 +165,20 @@ export function initProjects() {
   const lbImg = document.getElementById('lightbox-img');
   const closeLb = document.getElementById('lightbox-close');
 
+  // Helper: ensure an img's data-src is swapped to src before using it
+  function loadImg(img) {
+    if (img && img.dataset.src) {
+      img.src = img.dataset.src;
+      delete img.dataset.src;
+    }
+  }
+
   if (lightbox && lbImg && closeLb) {
     cards.forEach((card) => {
       card.addEventListener('click', () => {
-        const imgPath = card.querySelector('img').src;
-        lbImg.src = imgPath;
+        const img = card.querySelector('img');
+        loadImg(img);
+        lbImg.src = img.src;
         lightbox.classList.add('active');
       });
     });
@@ -181,13 +198,15 @@ export function initProjects() {
         const cats = card.dataset.categories.split(',');
         const show = f === 'all' || cats.includes(f);
         if (show) {
+          // Swap data-src → src so the browser actually downloads the image
+          loadImg(card.querySelector('img'));
           card.style.display = 'block';
           card.style.position = '';
           card.style.visibility = '';
           card.style.height = '';
           card.style.overflow = '';
           card.style.margin = '';
-          // trigger reflow
+          // trigger reflow so transition plays
           void card.offsetWidth;
           card.style.opacity = '1';
           card.style.transform = 'scale(1)';
@@ -197,11 +216,6 @@ export function initProjects() {
           setTimeout(() => {
             if (card.style.opacity === '0') {
               card.style.display = 'none';
-              card.style.position = 'absolute';
-              card.style.visibility = 'hidden';
-              card.style.height = '0';
-              card.style.overflow = 'hidden';
-              card.style.margin = '0';
             }
           }, 300);
         }
@@ -217,11 +231,6 @@ export function initProjects() {
       const cats = card.dataset.categories.split(',');
       if (!cats.includes('featured')) {
         card.style.display = 'none';
-        card.style.position = 'absolute';
-        card.style.visibility = 'hidden';
-        card.style.height = '0';
-        card.style.overflow = 'hidden';
-        card.style.margin = '0';
         card.style.opacity = '0';
         card.style.transform = 'scale(0.8)';
       }
