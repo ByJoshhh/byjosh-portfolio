@@ -124,6 +124,8 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  /* Offset for fixed navbar so anchors don't hide under it */
+  scroll-padding-top: 80px;
 }
 
 body {
@@ -139,6 +141,9 @@ body {
 
 /* Global stacking — sections sit above sakura layer (z-index:0) */
 section, footer { position: relative; z-index: 1; }
+
+/* Offset anchor scroll so sections don't hide under the fixed navbar */
+section[id] { scroll-margin-top: 80px; }
 
 /* --- Custom Scrollbar --- */
 ::-webkit-scrollbar {

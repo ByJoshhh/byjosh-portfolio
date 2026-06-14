@@ -54,19 +54,53 @@ export function initAnimations() {
 
 /**
  * Smooth-scroll for anchor links, accounting for the fixed navbar height.
+ * Uses getBoundingClientRect + window.scrollBy for pixel-accurate positioning.
+ * Also closes the mobile menu on click and highlights the active nav link.
  */
 export function initSmoothScroll() {
+  const navbar = document.querySelector('.navbar');
+  const navLinks = document.querySelectorAll('.navbar__link[href^="#"]');
+  const menuEl = document.querySelector('.navbar__menu');
+
+  // --- Anchor click → smooth scroll ---
   document.querySelectorAll('a[href^="#"]').forEach((link) => {
     link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (!target) return;
       e.preventDefault();
-      const target = document.querySelector(link.getAttribute('href'));
-      if (target) {
-        const navH = document.querySelector('.navbar')?.offsetHeight || 0;
-        window.scrollTo({
-          top: target.offsetTop - navH,
-          behavior: 'smooth',
-        });
+
+      // getBoundingClientRect is relative to viewport (already accounts for current scroll)
+      const navH = navbar?.offsetHeight || 0;
+      const targetTop = target.getBoundingClientRect().top + window.scrollY - navH - 8;
+      window.scrollTo({ top: targetTop, behavior: 'smooth' });
+
+      // Close mobile menu if open
+      if (menuEl?.classList.contains('navbar__menu--open')) {
+        menuEl.classList.remove('navbar__menu--open');
+        navbar?.classList.remove('menu-open');
       }
     });
   });
+
+  // --- Highlight active nav link on scroll ---
+  const sections = [...document.querySelectorAll('section[id]')];
+  if (!sections.length || !navLinks.length) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === `#${id}`);
+        });
+      }
+    });
+  }, {
+    rootMargin: '-40% 0px -55% 0px', // fires when section is roughly centered in view
+    threshold: 0,
+  });
+
+  sections.forEach(s => observer.observe(s));
 }
