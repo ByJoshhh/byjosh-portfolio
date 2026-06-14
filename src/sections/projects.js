@@ -135,7 +135,7 @@ export function initProjects() {
             <div class="project-card__image" style="background:${p.bg}">
               <div class="skeleton-loader"></div>
               <img ${imgAttr} alt="${p.title}" loading="lazy" decoding="async"
-                   onload="this.classList.add('loaded')"
+                   onload="this.classList.add('loaded'); const skel = this.previousElementSibling; if(skel && skel.classList.contains('skeleton-loader')) skel.remove();"
                    onerror="this.closest('.project-card').style.display='none'">
             </div>
             <div class="project-card__overlay">
