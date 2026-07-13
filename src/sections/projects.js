@@ -7,6 +7,13 @@ export function initProjects() {
   if (!section) return;
 
   const data = [
+    { title: 'Jankos League of Legends', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Jankos-LEAGUE-OF-LEGENDS.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
+    { title: 'Jankos Thumbnail 2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/JANKOS-THUMBNAIL2.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
+    { title: 'Junkos Unstoppable', cat: 'esports,thumbnails', img: '/images/E-SPORTS/JUNKOS-THUMBNAIL3-final%20(1).webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
+    { title: '2Runs', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/2runs.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Acheron Semana 1', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron-Semana-1.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    { title: 'Mistik TP', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/MISTIK-TP.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
+    { title: 'Sunix Texture Pack', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Texture-Pack-20261-cc.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
     { title: 'Acheron', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
     { title: 'Acheron Variant', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ACHERON-THUMBNAIL1.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
     { title: 'Aegleseeker', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aegleseeker.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
@@ -97,9 +104,10 @@ export function initProjects() {
     if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">DiseÃ±o de Miniaturas</span>';
     if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">DiseÃ±o de Header</span>';
     if (cat.includes('discord-banners')) return '<span class="lang-en">Discord Banner</span><span class="lang-es">Banner de Discord</span>';
-    if (cat.includes('banners')) return '<span class="lang-en">Banner Design</span><span class="lang-es">DiseÃ±o de Banner</span>';
+    if (cat.includes('banners')) return '<span class="lang-en">Banner Design</span><span class="lang-es">Diseño de Banner</span>';
     if (cat.includes('pfps')) return '<span class="lang-en">Avatar / PFP</span><span class="lang-es">Avatar / PFP</span>';
     if (cat.includes('anime-backgrounds')) return '<span class="lang-en">Anime Background</span><span class="lang-es">Fondo de Anime</span>';
+    if (cat.includes('esports')) return '<span class="lang-en">E-Sports</span><span class="lang-es">E-Sports</span>';
     return '<span class="lang-en">Digital Art</span><span class="lang-es">Arte Digital</span>';
   };
 
@@ -113,6 +121,7 @@ export function initProjects() {
         <button class="filter-btn filter-btn--active" data-filter="featured"><span class="lang-en">Featured</span><span class="lang-es">Destacados</span></button>
         <button class="filter-btn" data-filter="all"><span class="lang-en">All</span><span class="lang-es">Todos</span></button>
         <button class="filter-btn" data-filter="geometry-dash">Geometry Dash</button>
+        <button class="filter-btn" data-filter="esports">E-Sports</button>
         <button class="filter-btn" data-filter="thumbnails"><span class="lang-en">Thumbnails</span><span class="lang-es">Miniaturas</span></button>
         <button class="filter-btn" data-filter="discord-banners">Discord Banners</button>
         <button class="filter-btn" data-filter="anime-backgrounds"><span class="lang-en">Anime Backgrounds</span><span class="lang-es">Fondos de Anime</span></button>
