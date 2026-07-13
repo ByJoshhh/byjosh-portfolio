@@ -992,6 +992,21 @@ body.lang-es .lang-en { display: none !important; }
   box-shadow: 0 8px 24px rgba(79, 195, 247, 0.2);
 }
 
+.project-card__badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--accent-gradient);
+  color: var(--bg-primary);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 20px;
+  z-index: 10;
+  box-shadow: 0 4px 12px var(--accent-glow);
+  letter-spacing: 1px;
+}
+
 .project-card__image {
   width: 100%;
   aspect-ratio: 16 / 9;
