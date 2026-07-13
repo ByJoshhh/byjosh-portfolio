@@ -25,7 +25,6 @@ export function initProjects() {
     { title: 'Cosmic Cyclone', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Cosmic-Cyclone.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
     { title: 'Crimson Clutter', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Crimson-Clutter.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
     { title: 'Digital Descent', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/DigitalDescent.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
-    { title: 'GD Grief', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-grief.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
     { title: 'GD River', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/gd-river.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
     { title: 'Nhelv Old', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Nhelv(old).webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
     { title: 'Nhelv 4k', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Nhelv-4k.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
