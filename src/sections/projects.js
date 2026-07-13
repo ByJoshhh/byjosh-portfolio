@@ -7,13 +7,13 @@ export function initProjects() {
   if (!section) return;
 
   const data = [
-    { title: 'Jankos League of Legends', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Jankos-LEAGUE-OF-LEGENDS.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
-    { title: 'Jankos Thumbnail 2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/JANKOS-THUMBNAIL2.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
-    { title: 'Jankos Unstoppable', cat: 'esports,thumbnails', img: '/images/E-SPORTS/JUNKOS-THUMBNAIL3-final%20(1).webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
-    { title: '2Runs', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/2runs.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'Acheron Semana 1', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron-Semana-1.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
-    { title: 'Mistik TP', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/MISTIK-TP.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
-    { title: 'Sunix Texture Pack', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Texture-Pack-20261-cc.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
+    { title: 'Jankos League of Legends', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Jankos-LEAGUE-OF-LEGENDS.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)', isNew: true },
+    { title: 'Jankos Thumbnail 2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/JANKOS-THUMBNAIL2.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)', isNew: true },
+    { title: 'Jankos Unstoppable', cat: 'esports,thumbnails', img: '/images/E-SPORTS/JUNKOS-THUMBNAIL3-final%20(1).webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)', isNew: true },
+    { title: '2Runs', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/2runs.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)', isNew: true },
+    { title: 'Acheron Semana 1', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron-Semana-1.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)', isNew: true },
+    { title: 'Mistik TP', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/MISTIK-TP.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)', isNew: true },
+    { title: 'Sunix Texture Pack', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Texture-Pack-20261-cc.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)', isNew: true },
     { title: 'Acheron', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Acheron.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)' },
     { title: 'Acheron Variant', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ACHERON-THUMBNAIL1.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
     { title: 'Aegleseeker', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Aegleseeker.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
@@ -140,6 +140,7 @@ export function initProjects() {
               : `data-src="${p.img}"`;
             return `
           <div class="project-card card-spawn" data-categories="${p.cat}">
+            ${p.isNew ? '<div class="project-card__badge">NEW</div>' : ''}
             <div class="project-card__image" style="background:${p.bg}">
               <div class="skeleton-loader"></div>
               <img ${imgAttr} alt="${p.title}" loading="lazy" decoding="async"
