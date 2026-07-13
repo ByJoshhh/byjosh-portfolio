@@ -119,9 +119,9 @@ export function initProjects() {
       <div class="projects__filters fade-up">
         <button class="filter-btn filter-btn--active" data-filter="featured"><span class="lang-en">Featured</span><span class="lang-es">Destacados</span></button>
         <button class="filter-btn" data-filter="all"><span class="lang-en">All</span><span class="lang-es">Todos</span></button>
-        <button class="filter-btn" data-filter="geometry-dash">Geometry Dash</button>
-        <button class="filter-btn" data-filter="esports">E-Sports</button>
-        <button class="filter-btn" data-filter="thumbnails"><span class="lang-en">Thumbnails</span><span class="lang-es">Miniaturas</span></button>
+        <button class="filter-btn" data-filter="geometry-dash">Geometry Dash <span class="filter-badge">NEW</span></button>
+        <button class="filter-btn" data-filter="esports">E-Sports <span class="filter-badge">NEW</span></button>
+        <button class="filter-btn" data-filter="thumbnails"><span class="lang-en">Thumbnails</span><span class="lang-es">Miniaturas</span> <span class="filter-badge">NEW</span></button>
         <button class="filter-btn" data-filter="discord-banners">Discord Banners</button>
         <button class="filter-btn" data-filter="anime-backgrounds"><span class="lang-en">Anime Backgrounds</span><span class="lang-es">Fondos de Anime</span></button>
         <button class="filter-btn" data-filter="pfps">AVIs/pfps</button>

@@ -973,6 +973,18 @@ body.lang-es .lang-en { display: none !important; }
   font-weight: 600;
 }
 
+.filter-badge {
+  background: var(--accent-gradient);
+  color: var(--bg-primary);
+  font-size: 0.6rem;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: 6px;
+  box-shadow: 0 2px 8px var(--accent-glow);
+  vertical-align: middle;
+}
+
 .projects__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
