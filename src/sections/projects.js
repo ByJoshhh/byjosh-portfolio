@@ -7,6 +7,7 @@ export function initProjects() {
   if (!section) return;
 
   const data = [
+    { title: 'Wasureta by Helpecasus', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Wasureta-By-Helpecasus.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)', isNew: true },
     { title: 'Jankos League of Legends', cat: 'esports,thumbnails', img: '/images/E-SPORTS/Jankos-LEAGUE-OF-LEGENDS.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)', isNew: true },
     { title: 'Jankos Thumbnail 2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/JANKOS-THUMBNAIL2.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)', isNew: true },
     { title: 'Jankos Unstoppable', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/JUNKOS-THUMBNAIL3-final%20(1).webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)', isNew: true },
