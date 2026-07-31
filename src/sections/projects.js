@@ -83,7 +83,7 @@ export function initProjects() {
 
     { title: 'Kroh Banner', cat: 'banners', img: '/images/Banners/Kroh-2.webp', bg: 'linear-gradient(135deg, #6b3a2a, #1a1e3a)' },
     { title: 'Kroh Banner 1', cat: 'banners', img: '/images/Banners/Kroh-1.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
-    { title: 'ByJosh Banner', cat: 'featured,banners', img: '/images/Banners/ByJosh-Banner.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' },
+    // { title: 'ByJosh Banner', cat: 'featured,banners', img: '/images/Banners/ByJosh-Banner.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)' }, // hidden temporarily
     { title: 'Mitaka Asa', cat: 'banners', img: '/images/Banners/Mitaka-Asa.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
     { title: 'SpaceUK Banner', cat: 'banners', img: '/images/Banners/SpaceUK-banner.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
     { title: 'Ganyu Banner', cat: 'banners', img: '/images/Banners/ganyu-banner.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
