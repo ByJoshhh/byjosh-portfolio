@@ -7,7 +7,7 @@ export function initProjects() {
   if (!section) return;
 
   const data = [
-    { title: 'Still Home - G2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Still-Home-G2.webp', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
+    { title: 'Still Home - G2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Still-Home-G2-clean.webp?v=2', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'BDD vs Chovy', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/BPD-vs-Chovy.webp', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'The Golden', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-New.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
     { title: 'Wasureta by Helpecasus', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Wasureta-By-Helpecasus.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)', isNew: true },
