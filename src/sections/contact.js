@@ -66,8 +66,9 @@ export function initContact() {
               <span class="tooltip" style="position:absolute; top:-35px; left:50%; transform:translateX(-50%); background:var(--accent-primary); color:#000; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:600; opacity:0; transition:0.3s; pointer-events:none; white-space:nowrap;">¡Copiado! ByJoshhh_</span>
             </a>
           </div>
-          <div class="contact__character fade-up" style="margin-top: 48px; animation-delay: 0.35s; display: flex; justify-content: center;">
-            <img src="/images/haimiya-senpai-haimiya.gif" alt="Haimiya Anime Character" loading="lazy" decoding="async" style="max-width: 280px; width: 100%; border-radius: var(--radius-lg); animation: floatGif 4s ease-in-out infinite; box-shadow: var(--shadow-lg);">
+          <div class="contact__character fade-up" style="margin-top: 48px; animation-delay: 0.35s; display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;">
+            <img src="/images/haimiya-senpai-haimiya.gif" alt="Haimiya Anime Character" loading="lazy" decoding="async" style="max-width: 210px; width: 100%; border-radius: var(--radius-lg); animation: floatGif 4s ease-in-out infinite; box-shadow: var(--shadow-lg);">
+            <img src="/images/remielle.gif" alt="Remielle Anime Character" loading="lazy" decoding="async" style="max-width: 180px; width: 100%; border-radius: var(--radius-lg); animation: floatGif 5s ease-in-out infinite 0.6s; box-shadow: var(--shadow-lg);">
           </div>
         </div>
         <form action="https://api.web3forms.com/submit" method="POST" class="contact__form fade-up" id="contact-form" style="animation-delay: 0.3s">
