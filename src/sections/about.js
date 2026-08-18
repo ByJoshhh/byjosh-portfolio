@@ -41,6 +41,7 @@ export function initAbout() {
       <div class="about__visuals fade-up" style="animation-delay: 0.3s">
         <img src="/images/senpai-mio.gif" alt="Anime aesthetic 1" class="about__gif about__gif--1" loading="lazy" decoding="async">
         <img src="/images/haimiya-anime.gif" alt="Anime aesthetic 2" class="about__gif about__gif--2" loading="lazy" decoding="async">
+        <img src="/images/superbad-whats-up.gif" alt="McLovin Superbad" class="about__gif about__gif--3" loading="lazy" decoding="async">
       </div>
     </div>
   `;
