@@ -49,6 +49,7 @@ export function initProjects() {
     { title: 'Zodiac', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/ZODIAC-sunix.webp', bg: 'linear-gradient(135deg, #2c3e7a, #1a1e3a)' },
 
     { title: 'Violet Evergarden', cat: 'featured,headers', img: '/images/Headers/violet-evergarden-header.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
+    { title: 'Skirk', cat: 'featured,headers', img: '/images/Headers/Skirk-HEADER-h.webp', bg: 'linear-gradient(135deg, #0a0a12, #1a0a2e)', isNew: true },
     { title: '86 Header', cat: 'headers', img: '/images/Headers/86.webp', bg: 'linear-gradient(135deg, #1a237e, #0b0d14)' },
     { title: 'Alezitah', cat: 'headers', img: '/images/Headers/ALEZITAH.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)' },
     { title: 'Danganronpa Phobos', cat: 'headers', img: '/images/Headers/Danganronpa-Phobos.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' },
