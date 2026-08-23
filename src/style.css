@@ -1729,163 +1729,387 @@ body.lang-es .lang-en { display: none !important; }
   70%     { transform: translateY(-3px) scale(1.01); }
 }
 
-/* ── Tooltip ── */
+/* ==========================================
+   MUSIC PLAYER WIDGET (ENHANCED UI/UX)
+   ========================================== */
+#music-player {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  animation: mp-slide-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 1.2s both;
+  user-select: none;
+}
+
+@keyframes mp-slide-in {
+  from { opacity: 0; transform: translateY(24px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0)   scale(1); }
+}
+
+/* ── Attention pulse (3 subtle bounces) ── */
+#music-player.mp--attention {
+  animation: mp-attention 0.5s ease-in-out 3;
+}
+@keyframes mp-attention {
+  0%, 100% { transform: translateY(0) scale(1); }
+  40%      { transform: translateY(-7px) scale(1.03); }
+  70%      { transform: translateY(-2px) scale(1.01); }
+}
+
+/* ── Smart Tooltip ── */
 .mp-tooltip {
   position: absolute;
-  bottom: calc(100% + 10px);
+  bottom: calc(100% + 12px);
   right: 0;
-  background: rgba(13,13,15,0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(74,222,128,0.2);
-  color: rgba(255,255,255,0.75);
+  background: rgba(15, 15, 19, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+  color: rgba(255, 255, 255, 0.88);
   font-size: 0.72rem;
   font-weight: 500;
-  padding: 7px 13px;
-  border-radius: 8px;
+  padding: 6px 10px 6px 12px;
+  border-radius: 9px;
   white-space: nowrap;
-  pointer-events: none;
   display: flex;
   align-items: center;
-  gap: 7px;
-  /* Always visible — slide in with the widget */
+  gap: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   opacity: 0;
   transform: translateY(6px);
-  animation: mp-tooltip-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards;
-  /* Smooth transition when JS toggles opacity on play/pause */
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1), transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10;
 }
 
-@keyframes mp-tooltip-in {
-  to { opacity: 1; transform: translateY(0); }
+.mp-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  right: 20px;
+  border: 5px solid transparent;
+  border-top-color: rgba(74, 222, 128, 0.35);
 }
 
-/* ── Ambient glow ── */
+.mp-tooltip.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Auto-hide tooltip smoothly when music is playing */
+#music-player.mp--playing .mp-tooltip {
+  opacity: 0 !important;
+  transform: translateY(6px) !important;
+  pointer-events: none !important;
+}
+
+.mp-tooltip__content {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mp-tooltip__icon {
+  color: #4ade80;
+  flex-shrink: 0;
+}
+
+.mp-tooltip__close {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 2px 4px;
+  margin-left: 2px;
+  border-radius: 4px;
+  transition: color 0.2s, background 0.2s;
+}
+
+.mp-tooltip__close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Ambient Audio Glow ── */
 .mp-glow {
   position: absolute;
-  inset: -12px;
+  inset: -10px;
   border-radius: 50px;
   background: radial-gradient(ellipse, #4ade80 0%, transparent 70%);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.1s;
+  transition: opacity 0.2s;
   z-index: -1;
 }
 
-/* ── Main pill ── */
+/* ── Main Pill ── */
 .mp-inner {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(13, 13, 15, 0.78);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(14, 15, 19, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 50px;
-  padding: 8px 16px 8px 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
-  transition: border-color 0.4s, box-shadow 0.4s;
+  padding: 7px 14px 7px 7px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: border-color 0.35s, box-shadow 0.35s, transform 0.2s;
   position: relative;
 }
 
-#music-player.mp--playing .mp-inner {
-  border-color: rgba(74, 222, 128, 0.28);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 24px rgba(74,222,128,0.1);
+.mp-inner:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6);
 }
 
-/* ── Play button ── */
+#music-player.mp--playing .mp-inner {
+  border-color: rgba(74, 222, 128, 0.35);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55), 0 0 20px rgba(74, 222, 128, 0.12);
+}
+
+/* ── Play Button ── */
 .mp-btn {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   border: none;
-  background: rgba(74, 222, 128, 0.12);
+  background: rgba(74, 222, 128, 0.15);
   color: #4ade80;
   display: grid;
   place-items: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.2s, transform 0.15s, box-shadow 0.3s;
+  transition: background 0.2s, transform 0.15s, box-shadow 0.25s;
 }
-.mp-btn:hover {
-  background: rgba(74, 222, 128, 0.22);
-  transform: scale(1.08);
-  box-shadow: 0 0 14px rgba(74,222,128,0.25);
-}
-.mp-btn:active { transform: scale(0.93); }
-.mp-icon { width: 16px; height: 16px; }
 
-/* ── Equalizer bars ── */
+.mp-btn:hover {
+  background: rgba(74, 222, 128, 0.25);
+  transform: scale(1.08);
+  box-shadow: 0 0 16px rgba(74, 222, 128, 0.3);
+}
+
+.mp-btn:active {
+  transform: scale(0.92);
+}
+
+.mp-icon {
+  width: 17px;
+  height: 17px;
+  margin-left: 2px;
+}
+
+/* ── Equalizer Dancing Bars ── */
 .mp-eq {
   display: flex;
   align-items: flex-end;
-  gap: 2px;
-  height: 16px;
+  gap: 2.5px;
+  height: 15px;
 }
+
 .mp-eq-bar {
   width: 3px;
   border-radius: 2px;
   background: #4ade80;
   animation: mp-eq-dance 0.7s ease-in-out infinite alternate;
-  box-shadow: 0 0 4px rgba(74,222,128,0.6);
+  box-shadow: 0 0 5px rgba(74, 222, 128, 0.7);
 }
-.mp-eq-bar:nth-child(1) { animation-duration: 0.55s; height: 8px;  }
-.mp-eq-bar:nth-child(2) { animation-duration: 0.70s; height: 14px; animation-delay: 0.1s; }
-.mp-eq-bar:nth-child(3) { animation-duration: 0.60s; height: 6px;  animation-delay: 0.2s; }
+
+.mp-eq-bar:nth-child(1) { animation-duration: 0.5s; height: 8px; }
+.mp-eq-bar:nth-child(2) { animation-duration: 0.7s; height: 14px; animation-delay: 0.12s; }
+.mp-eq-bar:nth-child(3) { animation-duration: 0.6s; height: 7px; animation-delay: 0.22s; }
 
 @keyframes mp-eq-dance {
-  from { transform: scaleY(0.3); opacity: 0.6; }
-  to   { transform: scaleY(1);   opacity: 1;   }
+  from { transform: scaleY(0.25); opacity: 0.55; }
+  to   { transform: scaleY(1);    opacity: 1;    }
 }
 
-/* ── Visualizer ── */
-.mp-viz-wrap {
+/* ── Body & Visualizer ── */
+.mp-body {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 3px;
   align-items: flex-start;
 }
-#mp-canvas { display: block; opacity: 0.9; }
 
-/* ── Track row ── */
-.mp-track {
+.mp-canvas-wrap {
+  position: relative;
+  cursor: pointer;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+#mp-canvas {
+  display: block;
+  opacity: 0.95;
+}
+
+.mp-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0%;
+  background: linear-gradient(90deg, #4ade80, #38bdf8);
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
+  pointer-events: none;
+  transition: width 0.15s linear;
+}
+
+/* ── Track Info Row ── */
+.mp-info-row {
   display: flex;
   align-items: center;
   gap: 6px;
+  width: 100%;
   padding-left: 2px;
 }
-.mp-track-dot {
+
+.mp-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.22);
   flex-shrink: 0;
   transition: background 0.3s, box-shadow 0.3s;
 }
+
 .mp-dot--active {
   background: #4ade80;
-  box-shadow: 0 0 6px rgba(74,222,128,0.8);
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.9);
   animation: mp-dot-pulse 1.4s ease-in-out infinite;
 }
+
 @keyframes mp-dot-pulse {
-  0%,100% { box-shadow: 0 0 4px rgba(74,222,128,0.6); }
-  50%     { box-shadow: 0 0 10px rgba(74,222,128,1); }
-}
-.mp-track-name {
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.3);
-  letter-spacing: 0.5px;
-  white-space: nowrap;
-  transition: color 0.3s;
-}
-#music-player.mp--playing .mp-track-name {
-  color: rgba(74,222,128,0.65);
+  0%, 100% { box-shadow: 0 0 4px rgba(74, 222, 128, 0.6); }
+  50%      { box-shadow: 0 0 10px rgba(74, 222, 128, 1); }
 }
 
-@media (max-width: 480px) {
-  #music-player { bottom: 16px; right: 16px; }
-  #mp-canvas { width: 80px; }
+.mp-track-name {
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+  max-width: 82px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.3s;
 }
+
+#music-player.mp--playing .mp-track-name {
+  color: rgba(74, 222, 128, 0.75);
+}
+
+.mp-time {
+  font-size: 0.6rem;
+  font-family: monospace;
+  color: rgba(255, 255, 255, 0.25);
+  margin-left: auto;
+}
+
+#music-player.mp--playing .mp-time {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ── Volume / Mute Control ── */
+.mp-vol-wrap {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+  padding-left: 2px;
+}
+
+.mp-vol-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.4);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.mp-vol-btn:hover {
+  color: #4ade80;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mp-vol-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.mp-vol-slider-wrap {
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s;
+  display: flex;
+  align-items: center;
+}
+
+.mp-vol-wrap:hover .mp-vol-slider-wrap {
+  width: 50px;
+  opacity: 1;
+}
+
+.mp-vol-slider {
+  width: 46px;
+  height: 3px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.mp-vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4ade80;
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(74, 222, 128, 0.8);
+}
+
+.mp-vol-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #4ade80;
+  cursor: pointer;
+  border: none;
+}
+
+/* ── Mobile Adaptations ── */
+@media (max-width: 480px) {
+  #music-player {
+    bottom: 16px;
+    right: 14px;
+  }
+  #mp-canvas {
+    width: 90px;
+  }
+  .mp-vol-slider-wrap {
+    display: none;
+  }
+  .mp-tooltip {
+    right: -6px;
+    font-size: 0.68rem;
+  }
+}
+
 
 
