@@ -14,7 +14,12 @@ export function initMusicPlayer() {
   const widget = document.createElement('div');
   widget.id = 'music-player';
   widget.innerHTML = `
-    <div class="mp-tooltip" id="mp-tooltip">🎵 Background music available</div>
+    <div class="mp-tooltip" id="mp-tooltip">
+      <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0;color:#4ade80;margin-top:1px">
+        <path d="M9 3v10.55A4 4 0 1 0 11 17V7h4V3H9z"/>
+      </svg>
+      Background music available
+    </div>
     <div class="mp-glow" id="mp-glow"></div>
     <div class="mp-inner">
       <button class="mp-btn" id="mp-playbtn" aria-label="Play / Pause music">

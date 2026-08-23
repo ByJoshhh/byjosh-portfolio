@@ -1748,6 +1748,9 @@ body.lang-es .lang-en { display: none !important; }
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 0.4s ease, transform 0.4s ease;
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
 .mp-tooltip--visible {
   opacity: 1;
