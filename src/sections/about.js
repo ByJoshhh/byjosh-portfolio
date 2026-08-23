@@ -24,7 +24,7 @@ export function initAbout() {
           <div class="about__badges">
             <span class="badge badge--accent"><span class="lang-en">Available for Freelance</span><span class="lang-es">Disponible para Freelance</span></span>
             <span class="badge badge--primary"><span class="lang-en">Student</span><span class="lang-es">Estudiante</span></span>
-            <span class="badge badge--secondary"><span class="lang-en">Mexico</span><span class="lang-es">México</span></span>
+            <span class="badge badge--secondary"><span class="lang-en">United States</span><span class="lang-es">United States</span></span>
           </div>
         </div>
         <div class="about__stats fade-up stagger-children" style="margin-top: 40px;">
