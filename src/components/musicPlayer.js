@@ -67,10 +67,7 @@ export function initMusicPlayer() {
   const dotEl     = document.getElementById('mp-dot');
   const tooltip   = document.getElementById('mp-tooltip');
 
-  // ── One-time tooltip hint — appears once and stays visible until user plays ─
-  setTimeout(() => {
-    tooltip.classList.add('mp-tooltip--visible');
-  }, 2000);
+  // Tooltip is handled entirely by CSS animation (mp-tooltip-in) — no JS needed
 
   // ── Attention pulse (3 bounces, then stops) ────────────────────────────────
   setTimeout(() => {

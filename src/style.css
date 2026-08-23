@@ -1745,24 +1745,17 @@ body.lang-es .lang-en { display: none !important; }
   border-radius: 8px;
   white-space: nowrap;
   pointer-events: none;
-  opacity: 0;
-  transform: translateY(4px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
   display: flex;
   align-items: center;
   gap: 7px;
+  /* Always visible — slide in with the widget */
+  opacity: 0;
+  transform: translateY(6px);
+  animation: mp-tooltip-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards;
 }
-.mp-tooltip--visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-.mp-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  right: 18px;
-  border: 5px solid transparent;
-  border-top-color: rgba(74,222,128,0.2);
+
+@keyframes mp-tooltip-in {
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Ambient glow ── */
