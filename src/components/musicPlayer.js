@@ -113,8 +113,17 @@ export function initMusicPlayer() {
   }
 
   // ── Waveform drawing loop ──────────────────────────────────────────────────
-  function drawWave() {
+  let lastFrameTime = 0;
+  const IDLE_FPS = 1000 / 24;   // 24fps when paused
+  const PLAY_FPS = 1000 / 60;   // 60fps when playing
+
+  function drawWave(timestamp = 0) {
     rafId = requestAnimationFrame(drawWave);
+
+    // Throttle: 60fps while playing, 24fps while idle
+    const targetInterval = playing ? PLAY_FPS : IDLE_FPS;
+    if (timestamp - lastFrameTime < targetInterval) return;
+    lastFrameTime = timestamp;
 
     const W = canvas.width;
     const H = canvas.height;

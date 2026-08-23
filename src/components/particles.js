@@ -43,10 +43,10 @@ export function initParticles() {
   function init() {
     resize();
     const isMobile = w <= 768;
-    // Mobile: max 20 particles, Desktop: max 40
+    // Mobile: max 15 particles, Desktop: max 30 (reduced from 40)
     const count = isMobile
-      ? Math.min(Math.floor((w * h) / 30000), 20)
-      : Math.min(Math.floor((w * h) / 20000), 40);
+      ? Math.min(Math.floor((w * h) / 30000), 15)
+      : Math.min(Math.floor((w * h) / 20000), 30);
     particles = Array.from({ length: count }, makeParticle);
   }
 
@@ -69,7 +69,7 @@ export function initParticles() {
       ctx.fill();
     }
 
-    // Connections only on desktop — use squared distance (no sqrt needed)
+    // Connections only on desktop — fully sqrt-free alpha calculation
     if (w > 768) {
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
@@ -77,7 +77,8 @@ export function initParticles() {
           const dy = particles[i].y - particles[j].y;
           const distSq = dx * dx + dy * dy;
           if (distSq < CONNECT_DIST_SQ) {
-            const alpha = 0.035 * (1 - Math.sqrt(distSq) / 120);
+            // Linear falloff using distSq — no Math.sqrt needed
+            const alpha = 0.035 * (1 - distSq / CONNECT_DIST_SQ);
             ctx.beginPath();
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);

@@ -88,21 +88,13 @@
   background: rgba(255, 117, 140, 0.7);
   /* Consistent sakura petal shape */
   border-radius: 150% 0 150% 0 / 150% 0 150% 0;
-  box-shadow: 0 0 6px rgba(255, 117, 140, 0.3);
-  animation: fallSakura linear infinite;
+  /* box-shadow removed — reduces compositing layers */
   opacity: 0.9;
-  will-change: transform;
+  /* will-change removed — CSS animations are already compositor-promoted */
 }
 
 [data-theme="light"] .sakura-petal {
   background: rgba(255, 117, 140, 0.4);
-  box-shadow: 0 0 6px rgba(255, 117, 140, 0.2);
-}
-
-@media (max-width: 768px) {
-  .sakura-petal {
-    box-shadow: none;
-  }
 }
 
 @keyframes fallSakura {
@@ -174,9 +166,8 @@ section[id] { scroll-margin-top: 80px; }
   will-change: width;
 }
 
-/* --- Animated Striking Background --- */
-body::before,
-body::after {
+/* --- Static Background Glow (performance-optimised — no animation/blur) --- */
+body::before {
   content: '';
   position: fixed;
   top: 0;
@@ -185,31 +176,13 @@ body::after {
   height: 100vh;
   z-index: 0;
   pointer-events: none;
-  filter: blur(100px);
-  opacity: 0.85;
+  /* Two-colour radial blend baked into one static gradient — no blur, no animation */
+  background:
+    radial-gradient(ellipse 60% 55% at 12% 52%, rgba(255, 117, 140, 0.18) 0%, transparent 100%),
+    radial-gradient(ellipse 55% 50% at 88% 28%, rgba(79, 195, 247, 0.15) 0%, transparent 100%);
+  opacity: 1;
 }
-
-body::before {
-  background: radial-gradient(circle at 15% 50%, rgba(255, 117, 140, 0.22), transparent 45%);
-  animation: aurora-1 18s ease-in-out infinite alternate;
-}
-
-body::after {
-  background: radial-gradient(circle at 85% 30%, rgba(79, 195, 247, 0.2), transparent 50%);
-  animation: aurora-2 22s ease-in-out infinite alternate;
-}
-
-@keyframes aurora-1 {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.3) translate(10%, -10%); }
-  100% { transform: scale(1) translate(-5%, 15%); }
-}
-
-@keyframes aurora-2 {
-  0% { transform: scale(1) translate(0, 0); }
-  50% { transform: scale(1.4) translate(-10%, 10%); }
-  100% { transform: scale(0.9) translate(10%, -5%); }
-}
+body::after { display: none; }
 
 a {
   text-decoration: none;
