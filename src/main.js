@@ -19,6 +19,7 @@ import { initContact } from './sections/contact.js';
 
 import { initAnimations, initSmoothScroll } from './utils/animations.js';
 import { animateCounters } from './utils/counter.js';
+import { initMusicPlayer } from './components/musicPlayer.js';
 
 // --- Preloader Logic ---
 function initPreloader() {
@@ -70,6 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initParticles();
   initSakura();
   initCursor();
+  initMusicPlayer();
 
   // 2 — Sections (order matters for DOM population)
   initHero();
