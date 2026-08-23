@@ -232,26 +232,11 @@ export function initMusicPlayer() {
   // ── 6. Tooltip Behavior (Auto-show on load & pause, Auto-hide on play) ──────
   let tooltipDismissed = false;
 
-  setTimeout(() => {
-    if (!tooltipDismissed && !isPlaying) {
-      tooltip.classList.add('is-visible');
-    }
-  }, 1800);
-
-  // Attention bounce after appearing
-  setTimeout(() => {
-    if (!isPlaying) {
-      widget.classList.add('mp--attention');
-      widget.addEventListener('animationend', () => {
-        widget.classList.remove('mp--attention');
-      }, { once: true });
-    }
-  }, 2200);
-
   tooltipClose.addEventListener('click', (e) => {
     e.stopPropagation();
     tooltipDismissed = true;
     tooltip.classList.remove('is-visible');
+    tooltip.style.display = 'none';
   });
 
   // ── 7. Volume & Mute Controls ──────────────────────────────────────────────
