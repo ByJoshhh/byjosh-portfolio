@@ -189,27 +189,45 @@ export function initMusicPlayer() {
   }
 
   // ── Play / Pause toggle ────────────────────────────────────────────────────
-  async function togglePlay() {
-    initAudioCtx();
-    if (ctx.state === 'suspended') await ctx.resume();
+  let busy = false;  // lock to prevent race condition on rapid clicks
 
-    if (playing) {
-      fadeVolume(audio.volume, 0, 500);
-      setTimeout(() => audio.pause(), 520);
-      playing = false;
-      iconPlay.style.display = '';
-      iconEq.style.display   = 'none';
-      widget.classList.remove('mp--playing');
-      dotEl.classList.remove('mp-dot--active');
-    } else {
-      audio.volume = 0;
-      await audio.play();
-      fadeVolume(0, 0.45, 800);   // soft fade-in
-      playing = true;
-      iconPlay.style.display = 'none';
-      iconEq.style.display   = 'flex';
-      widget.classList.add('mp--playing');
-      dotEl.classList.add('mp-dot--active');
+  async function togglePlay() {
+    if (busy) return;   // ignore clicks while a play/pause is still in progress
+    busy = true;
+
+    try {
+      initAudioCtx();
+      if (ctx.state === 'suspended') await ctx.resume();
+
+      if (playing) {
+        fadeVolume(audio.volume, 0, 500);
+        setTimeout(() => audio.pause(), 520);
+        playing = false;
+        iconPlay.style.display = '';
+        iconEq.style.display   = 'none';
+        widget.classList.remove('mp--playing');
+        dotEl.classList.remove('mp-dot--active');
+        // Show tooltip again when paused
+        tooltip.style.opacity   = '1';
+        tooltip.style.transform = 'translateY(0)';
+      } else {
+        audio.volume = 0;
+        await audio.play();
+        fadeVolume(0, 0.45, 800);
+        playing = true;
+        iconPlay.style.display = 'none';
+        iconEq.style.display   = 'flex';
+        widget.classList.add('mp--playing');
+        dotEl.classList.add('mp-dot--active');
+        // Hide tooltip when playing
+        tooltip.style.opacity   = '0';
+        tooltip.style.transform = 'translateY(4px)';
+      }
+    } catch (err) {
+      console.warn('Audio toggle error:', err);
+    } finally {
+      // Release lock after a short buffer so double-clicks can't overlap
+      setTimeout(() => { busy = false; }, 300);
     }
   }
 

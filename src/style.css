@@ -1752,6 +1752,8 @@ body.lang-es .lang-en { display: none !important; }
   opacity: 0;
   transform: translateY(6px);
   animation: mp-tooltip-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 2.2s forwards;
+  /* Smooth transition when JS toggles opacity on play/pause */
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 @keyframes mp-tooltip-in {
