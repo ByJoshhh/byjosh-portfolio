@@ -196,9 +196,6 @@ export function initMusicPlayer() {
     initAudioCtx();
     if (ctx.state === 'suspended') await ctx.resume();
 
-    // hide tooltip if still visible
-    tooltip.classList.remove('mp-tooltip--visible');
-
     if (playing) {
       fadeVolume(audio.volume, 0, 500);
       setTimeout(() => audio.pause(), 520);
