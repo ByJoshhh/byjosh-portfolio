@@ -30,11 +30,11 @@ export function initPricing() {
           <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--primary" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
         </div>
 
-        <!-- AVIS -->
+        <!-- AVIS / PFPs -->
         <div class="service-card" style="padding: 32px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
           <div>
-            <h3 class="service-card__title" style="margin-bottom: 8px;"><span class="lang-en">Avatars / AVIS</span><span class="lang-es">Avatares / AVIS</span></h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Profile Pictures</span><span class="lang-es">Fotos de Perfil</span></p>
+            <h3 class="service-card__title" style="margin-bottom: 8px;"><span class="lang-en">Profile Pictures / AVIS</span><span class="lang-es">Profile Pictures / AVIS</span></h3>
+            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">PFPs & Icons</span><span class="lang-es">PFPs e Íconos</span></p>
             <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$3.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
           </div>
           <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--outline" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>

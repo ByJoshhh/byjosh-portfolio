@@ -105,11 +105,11 @@ export function initProjects() {
   ];
 
   const getCategoryLabel = (cat) => {
-    if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">DiseÃ±o de Miniaturas</span>';
-    if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">DiseÃ±o de Header</span>';
+    if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">Diseño de Miniaturas</span>';
+    if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">Diseño de Header</span>';
     if (cat.includes('discord-banners')) return '<span class="lang-en">Discord Banner</span><span class="lang-es">Banner de Discord</span>';
     if (cat.includes('banners')) return '<span class="lang-en">Banner Design</span><span class="lang-es">Diseño de Banner</span>';
-    if (cat.includes('pfps')) return '<span class="lang-en">Avatar / PFP</span><span class="lang-es">Avatar / PFP</span>';
+    if (cat.includes('pfps')) return '<span class="lang-en">Profile Picture / PFP</span><span class="lang-es">Foto de Perfil / PFP</span>';
     if (cat.includes('anime-backgrounds')) return '<span class="lang-en">Anime Background</span><span class="lang-es">Fondo de Anime</span>';
     if (cat.includes('esports')) return '<span class="lang-en">E-Sports</span><span class="lang-es">E-Sports</span>';
     return '<span class="lang-en">Digital Art</span><span class="lang-es">Arte Digital</span>';
