@@ -25,7 +25,7 @@ export function initPricing() {
               <span style="background: var(--accent-gradient); color: #0b0d14; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;"><span class="lang-en">Popular</span><span class="lang-es">Popular</span></span>
             </div>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Geometry Dash & Gaming</span><span class="lang-es">Geometry Dash y Gaming</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$4<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
+            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$4.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
           </div>
           <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--primary" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
         </div>
@@ -35,7 +35,7 @@ export function initPricing() {
           <div>
             <h3 class="service-card__title" style="margin-bottom: 8px;"><span class="lang-en">Profile Pictures / AVIS</span><span class="lang-es">Profile Pictures / AVIS</span></h3>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">PFPs & Icons</span><span class="lang-es">PFPs e Íconos</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$3.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
+            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$4<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
           </div>
           <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--outline" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
         </div>
@@ -48,7 +48,7 @@ export function initPricing() {
               <span style="background: var(--accent-gradient); color: #0b0d14; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;"><span class="lang-en">Popular</span><span class="lang-es">Popular</span></span>
             </div>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Twitter, YouTube, Twitch</span><span class="lang-es">Twitter, YouTube, Twitch</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$6.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
+            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$7<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
           </div>
           <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--primary" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
         </div>
@@ -58,7 +58,7 @@ export function initPricing() {
           <div>
             <h3 class="service-card__title" style="margin-bottom: 8px;"><span class="lang-en">UI & Overlays</span><span class="lang-es">Interfaces & Overlays</span></h3>
             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Stream Packs & Web UI</span><span class="lang-es">Stream Packs & Web UI</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$10<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
+            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$10.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
           </div>
           <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--outline" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
         </div>
