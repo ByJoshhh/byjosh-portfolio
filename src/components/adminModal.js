@@ -13,6 +13,7 @@
 import {
   getAdminPIN,
   setAdminPIN,
+  getSupabaseConfig,
   saveSupabaseConfig,
   generateReviewToken,
   getAllReviews,
@@ -563,19 +564,27 @@ function renderSettingsTab() {
   const el = document.getElementById('tab-content-settings');
   if (!el) return;
 
-  const currentSbUrl = localStorage.getItem('byjosh_sb_url') || '';
-  const currentSbKey = localStorage.getItem('byjosh_sb_key') || '';
+  const sbConfig = getSupabaseConfig();
+  const currentSbUrl = localStorage.getItem('byjosh_sb_url') || sbConfig.url;
+  const currentSbKey = localStorage.getItem('byjosh_sb_key') || sbConfig.key;
 
   el.innerHTML = `
     <div style="padding: 6px 0; display: flex; flex-direction: column; gap: 24px;">
       <div>
-        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
-          <span class="lang-en">Supabase Cloud Database (Cloud Sync)</span>
-          <span class="lang-es">Base de Datos Supabase (Sincronización en la Nube)</span>
-        </h4>
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
+          <h4 style="margin: 0; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
+            <span class="lang-en">Supabase Cloud Database (Cloud Sync)</span>
+            <span class="lang-es">Base de Datos Supabase (Sincronización en la Nube)</span>
+          </h4>
+          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: var(--radius-full); font-size: 0.72rem; color: var(--accent-primary);">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            <span class="lang-en">Cloud Database Connected</span>
+            <span class="lang-es">Base de Datos Conectada</span>
+          </div>
+        </div>
         <p style="margin: 0 0 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
-          <span class="lang-en">To synchronize reviews submitted by clients across the world in real-time, paste your Supabase Project URL & Anon Key:</span>
-          <span class="lang-es">Para sincronizar en tiempo real las reseñas que envían tus clientes desde sus computadoras, pega tu Project URL y Anon Key de Supabase:</span>
+          <span class="lang-en">Connected to your Supabase cloud project. Reviews and links synchronize across all devices in real-time.</span>
+          <span class="lang-es">Conectado a tu proyecto de Supabase en la nube. Las reseñas y enlaces se sincronizan entre todos los dispositivos en tiempo real.</span>
         </p>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <div>
@@ -583,8 +592,8 @@ function renderSettingsTab() {
             <input type="text" id="sb-url-input" class="form-input" placeholder="https://xyzcompany.supabase.co" value="${escapeHtml(currentSbUrl)}" />
           </div>
           <div>
-            <label class="form-label" style="font-size: 0.75rem;">Anon Public Key</label>
-            <input type="password" id="sb-key-input" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsIn..." value="${escapeHtml(currentSbKey)}" />
+            <label class="form-label" style="font-size: 0.75rem;">Anon / Publishable Key</label>
+            <input type="password" id="sb-key-input" class="form-input" placeholder="sb_publishable_... o eyJhbGciOiJIUzI1NiIsIn..." value="${escapeHtml(currentSbKey)}" />
           </div>
           <button id="btn-save-sb" class="btn btn--primary" style="align-self: flex-start; padding: 10px 22px; font-size: 0.82rem;">
             <span class="lang-en">Save Connection</span>

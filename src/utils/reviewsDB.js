@@ -9,19 +9,29 @@
 // Initial reviews list — empty by default awaiting real client submissions
 const DEFAULT_REVIEWS = [];
 
-function getSupabaseConfig() {
-  const url = import.meta.env?.VITE_SUPABASE_URL || localStorage.getItem('byjosh_sb_url') || '';
-  const key = import.meta.env?.VITE_SUPABASE_ANON_KEY || localStorage.getItem('byjosh_sb_key') || '';
+// Default Supabase Cloud Connection credentials
+export const DEFAULT_SB_URL = 'https://boftngybzscvrlzpixkp.supabase.co';
+export const DEFAULT_SB_KEY = 'sb_publishable_v88I5haoILGnNTKZE6NZ5A_57wvGAXD';
+
+const safeStorage = {
+  getItem: (k) => (typeof localStorage !== 'undefined' ? localStorage.getItem(k) : null),
+  setItem: (k, v) => { if (typeof localStorage !== 'undefined') localStorage.setItem(k, v); },
+  removeItem: (k) => { if (typeof localStorage !== 'undefined') localStorage.removeItem(k); }
+};
+
+export function getSupabaseConfig() {
+  const url = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_URL) || safeStorage.getItem('byjosh_sb_url') || DEFAULT_SB_URL;
+  const key = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_SUPABASE_ANON_KEY) || safeStorage.getItem('byjosh_sb_key') || DEFAULT_SB_KEY;
   return { url: url.replace(/\/$/, ''), key, isConfigured: Boolean(url && key) };
 }
 
 export function getAdminPIN() {
-  return import.meta.env?.VITE_ADMIN_PIN || localStorage.getItem('byjosh_admin_pin') || 'josh2026';
+  return (typeof import.meta !== 'undefined' && import.meta.env?.VITE_ADMIN_PIN) || safeStorage.getItem('byjosh_admin_pin') || 'josh2026';
 }
 
 export function setAdminPIN(newPin) {
   if (newPin && newPin.trim()) {
-    localStorage.setItem('byjosh_admin_pin', newPin.trim());
+    safeStorage.setItem('byjosh_admin_pin', newPin.trim());
     return true;
   }
   return false;
@@ -29,8 +39,8 @@ export function setAdminPIN(newPin) {
 
 export function saveSupabaseConfig(url, key) {
   if (url && key) {
-    localStorage.setItem('byjosh_sb_url', url.trim().replace(/\/$/, ''));
-    localStorage.setItem('byjosh_sb_key', key.trim());
+    safeStorage.setItem('byjosh_sb_url', url.trim().replace(/\/$/, ''));
+    safeStorage.setItem('byjosh_sb_key', key.trim());
     return true;
   }
   return false;
@@ -39,7 +49,7 @@ export function saveSupabaseConfig(url, key) {
 // ── Local Storage Helpers ───────────────────────────────────────────────────
 function getLocalReviews() {
   try {
-    const raw = localStorage.getItem('byjosh_reviews');
+    const raw = safeStorage.getItem('byjosh_reviews');
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     // Purge any previous sample placeholder reviews
@@ -54,12 +64,12 @@ function getLocalReviews() {
 }
 
 function saveLocalReviews(reviews) {
-  localStorage.setItem('byjosh_reviews', JSON.stringify(reviews));
+  safeStorage.setItem('byjosh_reviews', JSON.stringify(reviews));
 }
 
 function getLocalTokens() {
   try {
-    const raw = localStorage.getItem('byjosh_tokens');
+    const raw = safeStorage.getItem('byjosh_tokens');
     return raw ? JSON.parse(raw) : [];
   } catch (e) {
     return [];
@@ -67,7 +77,7 @@ function getLocalTokens() {
 }
 
 function saveLocalTokens(tokens) {
-  localStorage.setItem('byjosh_tokens', JSON.stringify(tokens));
+  safeStorage.setItem('byjosh_tokens', JSON.stringify(tokens));
 }
 
 // ── Public API Methods ───────────────────────────────────────────────────────
@@ -87,7 +97,7 @@ export async function getApprovedReviews() {
       });
       if (res.ok) {
         const data = await res.json();
-        if (Array.isArray(data) && data.length > 0) return data;
+        if (Array.isArray(data)) return data;
       }
     } catch (err) {
       console.warn('Supabase fetch failed, using local storage:', err);
@@ -110,7 +120,8 @@ export async function getAllReviews() {
         }
       });
       if (res.ok) {
-        return await res.json();
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
       }
     } catch (err) {
       console.warn('Supabase fetch failed, fallback to local:', err);
@@ -133,7 +144,8 @@ export async function getAllTokens() {
         }
       });
       if (res.ok) {
-        return await res.json();
+        const data = await res.json();
+        if (Array.isArray(data)) return data;
       }
     } catch (err) {
       console.warn('Supabase tokens fetch failed, fallback to local:', err);
@@ -154,7 +166,19 @@ export async function validateToken(tokenStr) {
 
   if (sb.isConfigured) {
     try {
-      const res = await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${cleanToken}`, {
+      // 1. Check if review already submitted with this token in Supabase
+      const revCheck = await fetch(`${sb.url}/rest/v1/reviews?token=eq.${encodeURIComponent(cleanToken)}&select=id`, {
+        headers: { 'apikey': sb.key, 'Authorization': `Bearer ${sb.key}` }
+      });
+      if (revCheck.ok) {
+        const revs = await revCheck.json();
+        if (revs && revs.length > 0) {
+          return { valid: false, error: 'Este enlace ya fue utilizado anteriormente.' };
+        }
+      }
+
+      // 2. Check token in Supabase review_tokens
+      const res = await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${encodeURIComponent(cleanToken)}`, {
         headers: {
           'apikey': sb.key,
           'Authorization': `Bearer ${sb.key}`
@@ -176,7 +200,7 @@ export async function validateToken(tokenStr) {
   }
 
   // Check if token was already used on this client's browser
-  const usedTokens = JSON.parse(localStorage.getItem('byjosh_used_tokens') || '[]');
+  const usedTokens = JSON.parse(safeStorage.getItem('byjosh_used_tokens') || '[]');
   if (usedTokens.includes(cleanToken)) {
     return { valid: false, error: 'Este enlace ya fue utilizado anteriormente.' };
   }
@@ -217,61 +241,86 @@ export async function validateToken(tokenStr) {
  * Submit client review
  */
 export async function submitReview({ token, name, handle, service, rating, comment }) {
-  const newReview = {
-    id: 'rev-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
+  const reviewPayload = {
     token,
     name: name.trim(),
     handle: (handle || '').trim(),
     service: service || 'General Design',
     rating: parseInt(rating, 10) || 5,
     comment: comment.trim(),
-    status: 'approved',
-    created_at: new Date().toISOString()
+    status: 'approved'
   };
 
   // Mark token as used on client device
-  const usedTokens = JSON.parse(localStorage.getItem('byjosh_used_tokens') || '[]');
+  const usedTokens = JSON.parse(safeStorage.getItem('byjosh_used_tokens') || '[]');
   if (!usedTokens.includes(token)) {
     usedTokens.push(token);
-    localStorage.setItem('byjosh_used_tokens', JSON.stringify(usedTokens));
+    safeStorage.setItem('byjosh_used_tokens', JSON.stringify(usedTokens));
   }
 
   const sb = getSupabaseConfig();
   if (sb.isConfigured) {
     try {
-      // 1. Insert review
+      // 1. Insert review into Supabase (let PostgreSQL generate UUID)
       const resReview = await fetch(`${sb.url}/rest/v1/reviews`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'apikey': sb.key,
           'Authorization': `Bearer ${sb.key}`,
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=representation'
         },
-        body: JSON.stringify(newReview)
+        body: JSON.stringify(reviewPayload)
       });
 
-      // 2. Mark token as used in Supabase
-      await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${token}`, {
+      // 2. Mark token as used in Supabase (or create if client link was offline)
+      const patchRes = await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${encodeURIComponent(token)}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
+          'Authorization': `Bearer ${sb.key}`,
+          'Prefer': 'return=representation'
         },
         body: JSON.stringify({ used: true })
       });
 
+      if (patchRes.ok) {
+        const patched = await patchRes.json();
+        if (!patched || patched.length === 0) {
+          // Token wasn't in review_tokens yet, insert it recorded as used
+          await fetch(`${sb.url}/rest/v1/review_tokens`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': sb.key,
+              'Authorization': `Bearer ${sb.key}`
+            },
+            body: JSON.stringify({
+              token,
+              service: service || 'General Design',
+              client_note: name.trim() + (handle ? ' (' + handle.trim() + ')' : ''),
+              used: true
+            })
+          });
+        }
+      }
+
       if (resReview.ok) {
-        return { success: true, review: newReview };
+        const data = await resReview.json();
+        return { success: true, review: data?.[0] || reviewPayload };
       }
     } catch (err) {
       console.warn('Supabase submit failed, saving locally:', err);
     }
   }
 
-
   // Local storage fallback
+  const newReview = {
+    ...reviewPayload,
+    id: 'rev-' + Date.now() + '-' + Math.random().toString(36).substring(2, 7),
+    created_at: new Date().toISOString()
+  };
   const reviews = getLocalReviews();
   reviews.unshift(newReview);
   saveLocalReviews(reviews);
@@ -298,13 +347,11 @@ export async function generateReviewToken({ service, clientNote }) {
   else if (sLow.includes('ui') || sLow.includes('overlay')) slug = 'ui';
 
   const token = 'bj-' + slug + '-' + Math.random().toString(36).substring(2, 8) + Date.now().toString(36);
-  const tokenObj = {
-    id: 'tok-' + Date.now(),
+  let tokenObj = {
     token,
     service: service || 'General Design',
     client_note: (clientNote || '').trim(),
-    used: false,
-    created_at: new Date().toISOString()
+    used: false
   };
 
   const sb = getSupabaseConfig();
@@ -316,18 +363,23 @@ export async function generateReviewToken({ service, clientNote }) {
           'Content-Type': 'application/json',
           'apikey': sb.key,
           'Authorization': `Bearer ${sb.key}`,
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=representation'
         },
         body: JSON.stringify(tokenObj)
       });
       if (res.ok) {
-        return tokenObj;
+        const data = await res.json();
+        if (data && data[0]) {
+          return data[0];
+        }
       }
     } catch (err) {
       console.warn('Supabase token save failed, fallback to local:', err);
     }
   }
 
+  tokenObj.id = 'tok-' + Date.now();
+  tokenObj.created_at = new Date().toISOString();
   const tokens = getLocalTokens();
   tokens.unshift(tokenObj);
   saveLocalTokens(tokens);
@@ -396,25 +448,37 @@ export async function deleteReview(id) {
  */
 export async function toggleTokenUsed(tokenStr) {
   const sb = getSupabaseConfig();
+  if (sb.isConfigured) {
+    try {
+      const checkRes = await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${encodeURIComponent(tokenStr)}`, {
+        headers: { 'apikey': sb.key, 'Authorization': `Bearer ${sb.key}` }
+      });
+      if (checkRes.ok) {
+        const rows = await checkRes.json();
+        if (rows && rows.length > 0) {
+          const newUsed = !rows[0].used;
+          await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${encodeURIComponent(tokenStr)}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json',
+              'apikey': sb.key,
+              'Authorization': `Bearer ${sb.key}`
+            },
+            body: JSON.stringify({ used: newUsed })
+          });
+          return true;
+        }
+      }
+    } catch (err) {
+      console.warn('Supabase toggle token failed:', err);
+    }
+  }
+
   const tokens = getLocalTokens();
   const item = tokens.find(t => t.token === tokenStr || t.id === tokenStr);
   if (item) {
     item.used = !item.used;
     saveLocalTokens(tokens);
-
-    if (sb.isConfigured) {
-      try {
-        await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${item.token}`, {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            'apikey': sb.key,
-            'Authorization': `Bearer ${sb.key}`
-          },
-          body: JSON.stringify({ used: item.used })
-        });
-      } catch (err) {}
-    }
     return true;
   }
   return false;
@@ -427,7 +491,7 @@ export async function deleteToken(tokenStr) {
   const sb = getSupabaseConfig();
   if (sb.isConfigured) {
     try {
-      await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${tokenStr}`, {
+      await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${encodeURIComponent(tokenStr)}`, {
         method: 'DELETE',
         headers: {
           'apikey': sb.key,

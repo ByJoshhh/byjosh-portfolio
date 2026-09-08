@@ -35,33 +35,34 @@ CREATE INDEX IF NOT EXISTS idx_tokens_token ON public.review_tokens(token);
 ALTER TABLE public.review_tokens ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reviews ENABLE ROW LEVEL SECURITY;
 
--- Políticas de Acceso Público Seguro (Anon Key):
--- A. Cualquiera puede leer las reseñas aprobadas para verlas en la web
+-- 5. Políticas de Acceso Público Seguro (Anon Key):
+DROP POLICY IF EXISTS "Public read approved reviews" ON public.reviews;
 CREATE POLICY "Public read approved reviews"
     ON public.reviews FOR SELECT
     USING (status = 'approved');
 
--- B. Un cliente con link puede insertar su reseña
+DROP POLICY IF EXISTS "Public insert reviews" ON public.reviews;
 CREATE POLICY "Public insert reviews"
     ON public.reviews FOR INSERT
     WITH CHECK (true);
 
--- C. Cualquiera puede verificar si un token existe
+DROP POLICY IF EXISTS "Public read tokens" ON public.review_tokens;
 CREATE POLICY "Public read tokens"
     ON public.review_tokens FOR SELECT
     USING (true);
 
--- D. Al enviar la reseña, el token se marca como usado
+DROP POLICY IF EXISTS "Public mark token used" ON public.review_tokens;
 CREATE POLICY "Public mark token used"
     ON public.review_tokens FOR UPDATE
     USING (true);
 
--- E. Permitir gestión (insertar tokens y moderar reseñas desde el panel)
+DROP POLICY IF EXISTS "Allow all reviews for admin operations" ON public.reviews;
 CREATE POLICY "Allow all reviews for admin operations"
     ON public.reviews FOR ALL
     USING (true)
     WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow all tokens for admin operations" ON public.review_tokens;
 CREATE POLICY "Allow all tokens for admin operations"
     ON public.review_tokens FOR ALL
     USING (true)
