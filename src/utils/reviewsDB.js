@@ -175,16 +175,42 @@ export async function validateToken(tokenStr) {
     }
   }
 
-  // Local storage check
-  const localTokens = getLocalTokens();
-  const found = localTokens.find(t => t.token === cleanToken);
-  if (!found) {
-    return { valid: false, error: 'El enlace de reseña no es válido o ha expirado.' };
-  }
-  if (found.used) {
+  // Check if token was already used on this client's browser
+  const usedTokens = JSON.parse(localStorage.getItem('byjosh_used_tokens') || '[]');
+  if (usedTokens.includes(cleanToken)) {
     return { valid: false, error: 'Este enlace ya fue utilizado anteriormente.' };
   }
-  return { valid: true, tokenData: found };
+
+  // Local storage check (if generated on this same device)
+  const localTokens = getLocalTokens();
+  const found = localTokens.find(t => t.token === cleanToken);
+  if (found) {
+    if (found.used) {
+      return { valid: false, error: 'Este enlace ya fue utilizado anteriormente.' };
+    }
+    return { valid: true, tokenData: found };
+  }
+
+  // Universal Client Link Compatibility:
+  // If the link was sent to a client on Discord/WhatsApp, they are on a different device.
+  // As long as the token has the ByJosh format (starts with 'bj-'), it is recognized as valid!
+  if (cleanToken.startsWith('bj-')) {
+    let service = 'Geometry Dash & Gaming';
+    if (cleanToken.includes('thumb')) service = 'Thumbnails';
+    else if (cleanToken.includes('banner') || cleanToken.includes('header')) service = 'Headers & Banners';
+    else if (cleanToken.includes('pfp') || cleanToken.includes('avi')) service = 'Profile Pictures / AVIS';
+    else if (cleanToken.includes('ui') || cleanToken.includes('overlay')) service = 'UI & Overlays';
+
+    return {
+      valid: true,
+      tokenData: {
+        token: cleanToken,
+        service: service
+      }
+    };
+  }
+
+  return { valid: false, error: 'El enlace de reseña no es válido o ha expirado.' };
 }
 
 /**
@@ -199,9 +225,16 @@ export async function submitReview({ token, name, handle, service, rating, comme
     service: service || 'General Design',
     rating: parseInt(rating, 10) || 5,
     comment: comment.trim(),
-    status: 'approved', // Auto-approve or pending; approved gives instant gratification
+    status: 'approved',
     created_at: new Date().toISOString()
   };
+
+  // Mark token as used on client device
+  const usedTokens = JSON.parse(localStorage.getItem('byjosh_used_tokens') || '[]');
+  if (!usedTokens.includes(token)) {
+    usedTokens.push(token);
+    localStorage.setItem('byjosh_used_tokens', JSON.stringify(usedTokens));
+  }
 
   const sb = getSupabaseConfig();
   if (sb.isConfigured) {
@@ -218,7 +251,7 @@ export async function submitReview({ token, name, handle, service, rating, comme
         body: JSON.stringify(newReview)
       });
 
-      // 2. Mark token as used
+      // 2. Mark token as used in Supabase
       await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${token}`, {
         method: 'PATCH',
         headers: {
@@ -236,6 +269,7 @@ export async function submitReview({ token, name, handle, service, rating, comme
       console.warn('Supabase submit failed, saving locally:', err);
     }
   }
+
 
   // Local storage fallback
   const reviews = getLocalReviews();
@@ -256,7 +290,14 @@ export async function submitReview({ token, name, handle, service, rating, comme
  * Generate a new unique token for a client
  */
 export async function generateReviewToken({ service, clientNote }) {
-  const token = 'bj-' + Math.random().toString(36).substring(2, 9) + '-' + Date.now().toString(36);
+  let slug = 'gen';
+  const sLow = (service || '').toLowerCase();
+  if (sLow.includes('thumb')) slug = 'thumb';
+  else if (sLow.includes('banner') || sLow.includes('header')) slug = 'banner';
+  else if (sLow.includes('pfp') || sLow.includes('avi') || sLow.includes('profile')) slug = 'pfp';
+  else if (sLow.includes('ui') || sLow.includes('overlay')) slug = 'ui';
+
+  const token = 'bj-' + slug + '-' + Math.random().toString(36).substring(2, 8) + Date.now().toString(36);
   const tokenObj = {
     id: 'tok-' + Date.now(),
     token,
