@@ -390,3 +390,53 @@ export async function deleteReview(id) {
   saveLocalReviews(reviews);
   return true;
 }
+
+/**
+ * Toggle token used state
+ */
+export async function toggleTokenUsed(tokenStr) {
+  const sb = getSupabaseConfig();
+  const tokens = getLocalTokens();
+  const item = tokens.find(t => t.token === tokenStr || t.id === tokenStr);
+  if (item) {
+    item.used = !item.used;
+    saveLocalTokens(tokens);
+
+    if (sb.isConfigured) {
+      try {
+        await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${item.token}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': sb.key,
+            'Authorization': `Bearer ${sb.key}`
+          },
+          body: JSON.stringify({ used: item.used })
+        });
+      } catch (err) {}
+    }
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Delete a token
+ */
+export async function deleteToken(tokenStr) {
+  const sb = getSupabaseConfig();
+  if (sb.isConfigured) {
+    try {
+      await fetch(`${sb.url}/rest/v1/review_tokens?token=eq.${tokenStr}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': sb.key,
+          'Authorization': `Bearer ${sb.key}`
+        }
+      });
+    } catch (err) {}
+  }
+  const tokens = getLocalTokens().filter(t => t.token !== tokenStr && t.id !== tokenStr);
+  saveLocalTokens(tokens);
+  return true;
+}

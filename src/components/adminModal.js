@@ -2,7 +2,13 @@
  * Admin Panel Modal for ByJosh
  * Activated by ?admin or clicking the footer trigger.
  * Protected by PIN.
- * 100% Native ByJosh UI Theme — Bilingual (English / Spanish) with In-Modal Language Switcher
+ * 100% Native ByJosh UI Theme — Bilingual (English / Spanish)
+ * Features:
+ *  - Create single-use client links
+ *  - Add reviews manually from Discord / WhatsApp
+ *  - Manage review status (Approve, Hide, Delete)
+ *  - Manage active tokens (Mark Used, Delete)
+ *  - Connect Supabase Cloud Database
  */
 import {
   getAdminPIN,
@@ -12,7 +18,10 @@ import {
   getAllReviews,
   getAllTokens,
   updateReviewStatus,
-  deleteReview
+  deleteReview,
+  toggleTokenUsed,
+  deleteToken,
+  submitReview
 } from '../utils/reviewsDB.js';
 import { renderReviewsCards } from '../sections/reviews.js';
 
@@ -163,7 +172,7 @@ async function renderDashboard(container) {
         </button>
       </div>
 
-      <!-- Navigation Tabs (Styled exactly like website filters) -->
+      <!-- Navigation Tabs -->
       <div class="admin-tabs">
         <button class="admin-tab is-active" data-tab="create">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -254,7 +263,7 @@ function renderCreateTab() {
             <span class="lang-en">Client Note or Name (For your records)</span>
             <span class="lang-es">Nota o Nombre del Cliente (Para tu control)</span>
           </label>
-          <input type="text" id="gen-client-note" class="form-input" placeholder="e.g. Alex GD — Discord" maxlength="60" />
+          <input type="text" id="gen-client-note" class="form-input" placeholder="e.g. voltxge / The-Golden" maxlength="60" />
         </div>
 
         <button type="submit" class="btn btn--primary" id="btn-gen-link" style="width: 100%; height: 46px; margin-top: 4px;">
@@ -325,54 +334,148 @@ async function loadReviewsTab() {
   el.innerHTML = '<div style="padding: 30px; text-align: center;"><div class="custom-spinner"></div></div>';
   const reviews = await getAllReviews();
 
-  if (!reviews || reviews.length === 0) {
-    el.innerHTML = `
-      <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
-        <span class="lang-en">No reviews registered yet.</span>
-        <span class="lang-es">No hay reseñas registradas aún.</span>
-      </div>
-    `;
-    return;
-  }
-
   el.innerHTML = `
-    <div style="padding: 6px 0; display: flex; flex-direction: column; gap: 12px; max-height: 420px; overflow-y: auto;">
-      ${reviews.map(r => `
-        <div class="admin-review-item" id="admin-rev-${r.id}" style="padding: 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+    <div style="padding: 6px 0; display: flex; flex-direction: column; gap: 14px;">
+      <!-- Top Action Bar: Add Review Manually Button -->
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="font-size: 0.85rem; color: var(--text-secondary);">
+          <span class="lang-en">Manage reviews published on your portfolio:</span>
+          <span class="lang-es">Gestiona las reseñas de tu portafolio:</span>
+        </span>
+        <button id="btn-toggle-manual-form" class="btn btn--outline" style="padding: 5px 14px; font-size: 0.75rem; height: 32px;">
+          <span class="lang-en">+ Add Review</span>
+          <span class="lang-es">+ Agregar Reseña</span>
+        </button>
+      </div>
+
+      <!-- Manual Review Form (Collapsible) -->
+      <div id="manual-review-box" style="display: none; padding: 18px; background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: var(--radius-md);">
+        <h5 style="margin: 0 0 12px; color: var(--text-primary); font-size: 0.92rem; font-family: var(--font-display);">
+          <span class="lang-en">Add Client Review Manually</span>
+          <span class="lang-es">Agregar Reseña de Cliente Manualmente</span>
+        </h5>
+        <form id="manual-review-form" style="display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
             <div>
-              <span style="color: var(--text-primary); font-weight: 700; font-size: 0.95rem;">${escapeHtml(r.name)}</span>
-              ${r.handle ? `<span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 6px;">(${escapeHtml(r.handle)})</span>` : ''}
-              <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
-                ${renderStarIcons(r.rating || 5)}
-                <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 4px;">${r.rating}/5</span>
+              <label class="form-label" style="font-size: 0.72rem;">Nombre / Name *</label>
+              <input type="text" id="man-name" class="form-input" placeholder="e.g. voltxge" required />
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 0.72rem;">Red Social / Handle</label>
+              <input type="text" id="man-handle" class="form-input" placeholder="e.g. @voltxge" />
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div>
+              <label class="form-label" style="font-size: 0.72rem;">Servicio / Service</label>
+              <select id="man-service" class="form-input form-select">
+                <option value="Thumbnails">Thumbnails</option>
+                <option value="Headers & Banners">Headers & Banners</option>
+                <option value="Profile Pictures / AVIS">Profile Pictures / AVIS</option>
+                <option value="UI & Overlays">UI & Overlays</option>
+                <option value="Custom Design">Custom Design</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" style="font-size: 0.72rem;">Calificación / Rating</label>
+              <select id="man-rating" class="form-input form-select">
+                <option value="5">5 Estrellas (★★★★★)</option>
+                <option value="4">4 Estrellas (★★★★☆)</option>
+                <option value="3">3 Estrellas (★★★☆☆)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="form-label" style="font-size: 0.72rem;">Comentario / Feedback *</label>
+            <textarea id="man-comment" class="form-input form-textarea" rows="3" placeholder="Escribe el comentario del cliente..." required></textarea>
+          </div>
+          <div style="display: flex; gap: 8px; justify-content: flex-end;">
+            <button type="button" id="btn-cancel-manual" class="btn btn--outline" style="padding: 6px 14px; font-size: 0.78rem;">Cancelar</button>
+            <button type="submit" class="btn btn--primary" style="padding: 6px 18px; font-size: 0.78rem;">Publicar Reseña</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Reviews List -->
+      <div id="admin-reviews-list" style="display: flex; flex-direction: column; gap: 12px; max-height: 380px; overflow-y: auto;">
+        ${(!reviews || reviews.length === 0) ? `
+          <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+            <span class="lang-en">No reviews registered yet. Use '+ Add Review' to publish one manually.</span>
+            <span class="lang-es">No hay reseñas registradas aún. Usa '+ Agregar Reseña' para añadir una.</span>
+          </div>
+        ` : reviews.map(r => `
+          <div class="admin-review-item" id="admin-rev-${r.id}" style="padding: 16px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;">
+              <div>
+                <span style="color: var(--text-primary); font-weight: 700; font-size: 0.95rem;">${escapeHtml(r.name)}</span>
+                ${r.handle ? `<span style="color: var(--text-muted); font-size: 0.8rem; margin-left: 6px;">(${escapeHtml(r.handle)})</span>` : ''}
+                <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+                  ${renderStarIcons(r.rating || 5)}
+                  <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 4px;">${r.rating}/5</span>
+                </div>
+              </div>
+              <span class="badge ${r.status === 'approved' ? 'badge--accent' : 'badge--secondary'}" style="font-size: 0.65rem;">
+                <span class="lang-en">${r.status === 'approved' ? 'Published' : 'Hidden'}</span>
+                <span class="lang-es">${r.status === 'approved' ? 'Publicada' : 'Oculta'}</span>
+              </span>
+            </div>
+            <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; font-style: italic;">
+              “${escapeHtml(r.comment)}”
+            </p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border-color);">
+              <span style="color: var(--text-muted); font-size: 0.75rem;">${escapeHtml(r.service || 'Design')}</span>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn--outline btn-toggle-status" data-id="${r.id}" data-current="${r.status}" style="padding: 4px 12px; font-size: 0.72rem; border-radius: var(--radius-full);">
+                  <span class="lang-en">${r.status === 'approved' ? 'Hide' : 'Approve'}</span>
+                  <span class="lang-es">${r.status === 'approved' ? 'Ocultar' : 'Aprobar'}</span>
+                </button>
+                <button class="btn btn--outline btn-delete-rev" data-id="${r.id}" style="padding: 4px 12px; font-size: 0.72rem; color: #f87171; border-color: rgba(248, 113, 113, 0.25); border-radius: var(--radius-full);">
+                  <span class="lang-en">Delete</span>
+                  <span class="lang-es">Eliminar</span>
+                </button>
               </div>
             </div>
-            <span class="badge ${r.status === 'approved' ? 'badge--accent' : 'badge--secondary'}" style="font-size: 0.65rem;">
-              <span class="lang-en">${r.status === 'approved' ? 'Published' : 'Hidden'}</span>
-              <span class="lang-es">${r.status === 'approved' ? 'Publicada' : 'Oculta'}</span>
-            </span>
           </div>
-          <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; font-style: italic;">
-            “${escapeHtml(r.comment)}”
-          </p>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border-color);">
-            <span style="color: var(--text-muted); font-size: 0.75rem;">${escapeHtml(r.service || 'Design')}</span>
-            <div style="display: flex; gap: 8px;">
-              <button class="btn btn--outline btn-toggle-status" data-id="${r.id}" data-current="${r.status}" style="padding: 4px 12px; font-size: 0.72rem; border-radius: var(--radius-full);">
-                <span class="lang-en">${r.status === 'approved' ? 'Hide' : 'Approve'}</span>
-                <span class="lang-es">${r.status === 'approved' ? 'Ocultar' : 'Aprobar'}</span>
-              </button>
-              <button class="btn btn--outline btn-delete-rev" data-id="${r.id}" style="padding: 4px 12px; font-size: 0.72rem; color: #f87171; border-color: rgba(248, 113, 113, 0.25); border-radius: var(--radius-full);">
-                <span class="lang-en">Delete</span>
-                <span class="lang-es">Eliminar</span>
-              </button>
-            </div>
-          </div>
-        </div>
-      `).join('')}
+        `).join('')}
+      </div>
     </div>
   `;
+
+  // Manual Review Form Logic
+  const toggleBtn = document.getElementById('btn-toggle-manual-form');
+  const manualBox = document.getElementById('manual-review-box');
+  const cancelBtn = document.getElementById('btn-cancel-manual');
+  const manualForm = document.getElementById('manual-review-form');
+
+  toggleBtn?.addEventListener('click', () => {
+    const isShown = manualBox.style.display !== 'none';
+    manualBox.style.display = isShown ? 'none' : 'block';
+  });
+
+  cancelBtn?.addEventListener('click', () => {
+    manualBox.style.display = 'none';
+  });
+
+  manualForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('man-name').value;
+    const handle = document.getElementById('man-handle').value;
+    const service = document.getElementById('man-service').value;
+    const rating = parseInt(document.getElementById('man-rating').value, 10) || 5;
+    const comment = document.getElementById('man-comment').value;
+
+    await submitReview({
+      token: 'manual-' + Date.now(),
+      name,
+      handle,
+      service,
+      rating,
+      comment
+    });
+
+    await loadReviewsTab();
+    renderReviewsCards();
+  });
 
   el.querySelectorAll('.btn-toggle-status').forEach(btn => {
     btn.addEventListener('click', async () => {
@@ -425,14 +528,35 @@ async function loadTokensTab() {
             </div>
             <code style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">${escapeHtml(t.token)}</code>
           </div>
-          <span class="badge ${t.used ? 'badge--secondary' : 'badge--primary'}" style="font-size: 0.68rem; white-space: nowrap;">
-            <span class="lang-en">${t.used ? 'Used' : 'Pending'}</span>
-            <span class="lang-es">${t.used ? 'Utilizado' : 'Pendiente'}</span>
-          </span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button class="btn btn--outline btn-toggle-token" data-token="${t.token}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
+              <span class="badge ${t.used ? 'badge--secondary' : 'badge--primary'}" style="font-size: 0.65rem; padding: 1px 6px;">
+                <span class="lang-en">${t.used ? 'Used' : 'Pending'}</span>
+                <span class="lang-es">${t.used ? 'Utilizado' : 'Pendiente'}</span>
+              </span>
+            </button>
+            <button class="btn btn--outline btn-delete-token" data-token="${t.token}" style="padding: 4px 8px; font-size: 0.7rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2); border-radius: var(--radius-full);" title="Eliminar enlace">
+              &times;
+            </button>
+          </div>
         </div>
       `).join('')}
     </div>
   `;
+
+  el.querySelectorAll('.btn-toggle-token').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await toggleTokenUsed(btn.dataset.token);
+      await loadTokensTab();
+    });
+  });
+
+  el.querySelectorAll('.btn-delete-token').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await deleteToken(btn.dataset.token);
+      await loadTokensTab();
+    });
+  });
 }
 
 function renderSettingsTab() {
@@ -446,12 +570,12 @@ function renderSettingsTab() {
     <div style="padding: 6px 0; display: flex; flex-direction: column; gap: 24px;">
       <div>
         <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
-          <span class="lang-en">Supabase Cloud Database (Optional)</span>
-          <span class="lang-es">Base de Datos Supabase (Opcional)</span>
+          <span class="lang-en">Supabase Cloud Database (Cloud Sync)</span>
+          <span class="lang-es">Base de Datos Supabase (Sincronización en la Nube)</span>
         </h4>
         <p style="margin: 0 0 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
-          <span class="lang-en">To store reviews in the free cloud database, paste your Supabase credentials below.</span>
-          <span class="lang-es">Para sincronizar las reseñas en la nube gratis, pega las credenciales de tu proyecto en Supabase.</span>
+          <span class="lang-en">To synchronize reviews submitted by clients across the world in real-time, paste your Supabase Project URL & Anon Key:</span>
+          <span class="lang-es">Para sincronizar en tiempo real las reseñas que envían tus clientes desde sus computadoras, pega tu Project URL y Anon Key de Supabase:</span>
         </p>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <div>
