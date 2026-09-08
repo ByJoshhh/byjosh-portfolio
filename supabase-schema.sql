@@ -66,11 +66,3 @@ CREATE POLICY "Allow all tokens for admin operations"
     ON public.review_tokens FOR ALL
     USING (true)
     WITH CHECK (true);
-
--- 5. Reseñas iniciales destacadas de muestra (opcional)
-INSERT INTO public.reviews (token, name, handle, service, rating, comment, status)
-VALUES
-    ('sample-1', 'Kroh', '@Kroh_GD', 'Geometry Dash & Gaming', 5, 'Increíble miniatura para mi video de Geometry Dash. El nivel de detalle y los efectos de iluminación están a otro nivel. 100% recomendado!', 'approved'),
-    ('sample-2', 'Vortex', '@vortex_fps', 'Headers & Banners', 5, 'El banner para mi canal de Twitch y Twitter quedó brutal. Captó la estética anime dark exacta que le pedí y la entrega fue súper rápida.', 'approved'),
-    ('sample-3', 'Akihiro', 'Discord: Aki#0001', 'Profile Pictures / AVIS', 5, 'Mi PFP quedó hermosa, el estilo y los colores combinan perfecto. Gran atención y profesionalismo.', 'approved')
-ON CONFLICT DO NOTHING;

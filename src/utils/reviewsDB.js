@@ -6,39 +6,8 @@
  * 2. In-browser LocalStorage Fallback (so everything works out-of-the-box for testing)
  */
 
-// Initial sample reviews shown by default
-const DEFAULT_REVIEWS = [
-  {
-    id: 'rev-sample-1',
-    name: 'Kroh',
-    handle: '@Kroh_GD',
-    service: 'Geometry Dash & Gaming',
-    rating: 5,
-    comment: 'Increíble miniatura para mi video de Geometry Dash. El nivel de detalle y los efectos de iluminación están a otro nivel. 100% recomendado!',
-    status: 'approved',
-    created_at: new Date(Date.now() - 86400000 * 3).toISOString()
-  },
-  {
-    id: 'rev-sample-2',
-    name: 'Vortex',
-    handle: '@vortex_fps',
-    service: 'Headers & Banners',
-    rating: 5,
-    comment: 'El banner para mi canal de Twitch y Twitter quedó brutal. Captó la estética anime dark exacta que le pedí y la entrega fue súper rápida.',
-    status: 'approved',
-    created_at: new Date(Date.now() - 86400000 * 7).toISOString()
-  },
-  {
-    id: 'rev-sample-3',
-    name: 'Akihiro',
-    handle: 'Discord: Aki#0001',
-    service: 'Profile Pictures / AVIS',
-    rating: 5,
-    comment: 'Mi PFP quedó hermosa, el estilo y los colores combinan perfecto. Gran atención y profesionalismo.',
-    status: 'approved',
-    created_at: new Date(Date.now() - 86400000 * 12).toISOString()
-  }
-];
+// Initial reviews list — empty by default awaiting real client submissions
+const DEFAULT_REVIEWS = [];
 
 function getSupabaseConfig() {
   const url = import.meta.env?.VITE_SUPABASE_URL || localStorage.getItem('byjosh_sb_url') || '';
@@ -71,13 +40,16 @@ export function saveSupabaseConfig(url, key) {
 function getLocalReviews() {
   try {
     const raw = localStorage.getItem('byjosh_reviews');
-    if (!raw) {
-      localStorage.setItem('byjosh_reviews', JSON.stringify(DEFAULT_REVIEWS));
-      return DEFAULT_REVIEWS;
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    // Purge any previous sample placeholder reviews
+    const cleaned = parsed.filter(r => !r.id?.startsWith('rev-sample-'));
+    if (cleaned.length !== parsed.length) {
+      saveLocalReviews(cleaned);
     }
-    return JSON.parse(raw);
+    return cleaned;
   } catch (e) {
-    return DEFAULT_REVIEWS;
+    return [];
   }
 }
 

@@ -59,20 +59,35 @@ export async function renderReviewsCards() {
   if (!container) return;
 
   const reviews = await getApprovedReviews();
+  const badgeEl = document.getElementById('reviews-summary-badge');
 
   if (!reviews || reviews.length === 0) {
+    if (badgeEl) badgeEl.style.display = 'none';
+
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px 20px; color: var(--text-muted); grid-column: 1 / -1;">
-        <p><span class="lang-en">No public reviews yet. Be the first!</span><span class="lang-es">Aún no hay reseñas públicas. ¡Sé el primero!</span></p>
+      <div class="reviews__empty-state" style="text-align: center; padding: 52px 24px; background: var(--bg-surface); border: 1px dashed var(--border-light); border-radius: var(--radius-lg); grid-column: 1 / -1;">
+        <div class="modal-icon-badge" style="margin: 0 auto 16px;">
+          <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="1.8" fill="none">
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+          </svg>
+        </div>
+        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-family: var(--font-display); font-size: 1.15rem; font-weight: 700;">
+          <span class="lang-en">Awaiting Verified Reviews</span>
+          <span class="lang-es">Esperando Primeras Reseñas</span>
+        </h4>
+        <p style="margin: 0; color: var(--text-secondary); font-size: 0.88rem; max-width: 440px; margin: 0 auto; line-height: 1.6;">
+          <span class="lang-en">Feedback from clients will be published here upon project delivery.</span>
+          <span class="lang-es">Las valoraciones de los clientes aparecerán aquí conforme se entreguen los proyectos.</span>
+        </p>
       </div>
     `;
     return;
   }
 
-  const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 5), 0);
-  const avgRating = (totalRating / reviews.length).toFixed(1);
-  const badgeEl = document.getElementById('reviews-summary-badge');
   if (badgeEl) {
+    badgeEl.style.display = 'flex';
+    const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 5), 0);
+    const avgRating = (totalRating / reviews.length).toFixed(1);
     badgeEl.querySelector('.reviews__rating-text').textContent = `${avgRating} / 5.0 (${reviews.length})`;
   }
 
