@@ -41,21 +41,34 @@ import {
 import { renderReviewsCards } from '../sections/reviews.js';
 
 export function initAdminModal() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const hash = window.location.hash;
+  const checkUrlAndOpen = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const hash = window.location.hash;
+    if (urlParams.has('admin') || hash.includes('admin')) {
+      openAdminModal();
+    }
+  };
 
-  if (urlParams.has('admin') || hash.includes('admin')) {
-    openAdminModal();
-  }
+  checkUrlAndOpen();
+  window.addEventListener('popstate', checkUrlAndOpen);
+  window.addEventListener('hashchange', checkUrlAndOpen);
 
-  // Bind footer trigger if present
-  const footerTrigger = document.getElementById('admin-footer-trigger');
+  // Bind footer trigger if present (supports both ID naming variants)
+  const footerTrigger = document.getElementById('footer-admin-trigger') || document.getElementById('admin-footer-trigger');
   if (footerTrigger) {
     footerTrigger.addEventListener('click', (e) => {
       e.preventDefault();
       openAdminModal();
     });
   }
+
+  // Handy admin shortcut: Alt+A
+  window.addEventListener('keydown', (e) => {
+    if ((e.altKey && (e.key === 'a' || e.key === 'A')) || (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a'))) {
+      e.preventDefault();
+      openAdminModal();
+    }
+  });
 }
 
 export function openAdminModal() {
@@ -63,19 +76,30 @@ export function openAdminModal() {
   const existing = document.getElementById('byjosh-admin-modal');
   if (existing) existing.remove();
 
+  // Keep URL in sync so refreshing stays in admin mode
+  if (!window.location.search.includes('admin') && !window.location.hash.includes('admin')) {
+    const newUrl = window.location.pathname + '?admin' + (window.location.hash || '');
+    window.history.replaceState({}, document.title, newUrl);
+  }
+
   const modal = document.createElement('div');
   modal.id = 'byjosh-admin-modal';
-  modal.className = 'modal-backdrop is-open';
+  modal.className = 'custom-modal is-open';
 
   modal.innerHTML = `
-    <div class="modal-overlay" id="admin-backdrop"></div>
-    <div class="modal-card modal-card--wide" style="max-width: 780px;">
-      <div class="modal-header-actions" style="position: absolute; top: 18px; right: 18px; display: flex; align-items: center; gap: 10px; z-index: 10;">
-        <button id="admin-lang-toggle" class="btn btn--outline" style="padding: 4px 12px; font-size: 0.75rem; border-radius: var(--radius-full); height: 30px;">
+    <div class="custom-modal__backdrop" id="admin-backdrop"></div>
+    <div class="custom-modal__box custom-modal__box--large" style="max-width: 820px; width: 100%; padding: 32px 28px;">
+      <div class="modal-top-actions">
+        <button id="admin-lang-toggle" class="btn btn--outline modal-lang-btn">
           <span class="lang-en">ES</span>
           <span class="lang-es">EN</span>
         </button>
-        <button class="modal-close" id="admin-close-btn" aria-label="Close modal">&times;</button>
+        <button class="custom-modal__close" id="admin-close-btn" aria-label="Close modal">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
       </div>
       <div id="admin-body"></div>
     </div>
@@ -99,12 +123,21 @@ export function openAdminModal() {
   function closeAdmin() {
     modal.classList.remove('is-open');
     setTimeout(() => modal.remove(), 300);
-    const cleanUrl = window.location.pathname;
+    const cleanUrl = window.location.pathname + (window.location.hash.includes('admin') ? '' : window.location.hash);
     window.history.replaceState({}, document.title, cleanUrl);
   }
 
   backdrop.addEventListener('click', closeAdmin);
   closeBtn.addEventListener('click', closeAdmin);
+
+  // Close on Escape key
+  const escHandler = (e) => {
+    if (e.key === 'Escape') {
+      closeAdmin();
+      window.removeEventListener('keydown', escHandler);
+    }
+  };
+  window.addEventListener('keydown', escHandler);
 
   const isAuth = sessionStorage.getItem('byjosh_admin_auth') === '1';
   if (isAuth) {
@@ -153,6 +186,7 @@ function renderPinScreen(container) {
   const form = document.getElementById('admin-pin-form');
   const pinInput = document.getElementById('admin-pin-input');
   const pinError = document.getElementById('pin-error');
+  setTimeout(() => pinInput?.focus(), 80);
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
@@ -269,6 +303,8 @@ async function renderDashboard(container) {
 async function renderCreateTab() {
   const el = document.getElementById('tab-content-create');
   if (!el) return;
+
+  el.innerHTML = '<div style="padding: 30px; text-align: center;"><div class="custom-spinner"></div></div>';
 
   const [plans, cats] = await Promise.all([
     getPricingPlans(),
