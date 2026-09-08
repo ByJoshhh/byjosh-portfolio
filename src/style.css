@@ -2332,10 +2332,26 @@ body.lang-es .lang-en { display: none !important; }
   max-width: 620px;
 }
 
-.custom-modal__close {
+.modal-top-actions {
   position: absolute;
   top: 18px;
   right: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.modal-lang-btn {
+  padding: 4px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  height: 34px;
+  border-radius: var(--radius-full);
+}
+
+.custom-modal__close {
   background: rgba(200, 215, 235, 0.04);
   border: 1px solid var(--border-color);
   color: var(--text-muted);

@@ -79,9 +79,20 @@ export function initNavbar() {
     });
   }
 
+  // Initialize language from localStorage (or browser preference)
+  const storedLang = localStorage.getItem('byjosh_lang');
+  if (storedLang === 'es') {
+    document.body.classList.add('lang-es');
+  } else if (storedLang === 'en') {
+    document.body.classList.remove('lang-es');
+  }
+
   if (langToggle) {
     langToggle.addEventListener('click', () => {
       document.body.classList.toggle('lang-es');
+      const isEs = document.body.classList.contains('lang-es');
+      localStorage.setItem('byjosh_lang', isEs ? 'es' : 'en');
+      window.dispatchEvent(new CustomEvent('byjosh:langchange', { detail: { lang: isEs ? 'es' : 'en' } }));
     });
   }
 

@@ -2,7 +2,7 @@
  * Admin Panel Modal for ByJosh
  * Activated by ?admin or clicking the footer trigger.
  * Protected by PIN.
- * 100% Native ByJosh UI Theme — No Emojis, Clean SVG Line Icons, Custom Selects
+ * 100% Native ByJosh UI Theme — Bilingual (English / Spanish) with In-Modal Language Switcher
  */
 import {
   getAdminPIN,
@@ -43,12 +43,17 @@ export function openAdmin() {
   modal.innerHTML = `
     <div class="custom-modal__backdrop"></div>
     <div class="custom-modal__box custom-modal__box--large">
-      <button class="custom-modal__close" id="admin-modal-close" aria-label="Cerrar">
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="18" y1="6" x2="6" y2="18"></line>
-          <line x1="6" y1="6" x2="18" y2="18"></line>
-        </svg>
-      </button>
+      <div class="modal-top-actions">
+        <button type="button" class="btn btn--outline modal-lang-btn" id="admin-modal-lang-btn" aria-label="Toggle language">
+          <span class="lang-en">ES</span><span class="lang-es">EN</span>
+        </button>
+        <button class="custom-modal__close" id="admin-modal-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
       <div id="admin-modal-body"></div>
     </div>
   `;
@@ -56,7 +61,17 @@ export function openAdmin() {
 
   const backdrop = modal.querySelector('.custom-modal__backdrop');
   const closeBtn = modal.querySelector('#admin-modal-close');
+  const langBtn = modal.querySelector('#admin-modal-lang-btn');
   const bodyEl = modal.querySelector('#admin-modal-body');
+
+  function toggleLang() {
+    document.body.classList.toggle('lang-es');
+    const isEs = document.body.classList.contains('lang-es');
+    localStorage.setItem('byjosh_lang', isEs ? 'es' : 'en');
+    window.dispatchEvent(new CustomEvent('byjosh:langchange', { detail: { lang: isEs ? 'es' : 'en' } }));
+  }
+
+  langBtn.addEventListener('click', toggleLang);
 
   function closeAdmin() {
     modal.classList.remove('is-open');
@@ -85,19 +100,28 @@ function renderPinScreen(container) {
           <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
         </svg>
       </div>
-      <span class="section__tag" style="margin-bottom: 8px;">Acceso Privado</span>
+      <span class="section__tag" style="margin-bottom: 8px;">
+        <span class="lang-en">Private Access</span>
+        <span class="lang-es">Acceso Privado</span>
+      </span>
       <h3 style="margin: 0 0 8px; color: var(--text-primary); font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;">
-        Panel de Administración
+        <span class="lang-en">Admin Dashboard</span>
+        <span class="lang-es">Panel de Administración</span>
       </h3>
       <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 26px;">
-        Ingresa tu PIN maestro para gestionar enlaces y reseñas.
+        <span class="lang-en">Enter your master PIN to manage links and reviews.</span>
+        <span class="lang-es">Ingresa tu PIN maestro para gestionar enlaces y reseñas.</span>
       </p>
 
       <form id="admin-pin-form" style="max-width: 300px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;">
         <input type="password" id="admin-pin-input" class="form-input" placeholder="••••" required autofocus style="text-align: center; letter-spacing: 6px; font-size: 1.3rem; height: 46px;" />
-        <div id="pin-error" style="color: #ef4444; font-size: 0.8rem; display: none;">PIN incorrecto. Inténtalo de nuevo.</div>
+        <div id="pin-error" style="color: #ef4444; font-size: 0.8rem; display: none;">
+          <span class="lang-en">Incorrect PIN. Try again.</span>
+          <span class="lang-es">PIN incorrecto. Inténtalo de nuevo.</span>
+        </div>
         <button type="submit" class="btn btn--primary" style="width: 100%; height: 44px;">
-          Entrar al Panel
+          <span class="lang-en">Enter Dashboard</span>
+          <span class="lang-es">Entrar al Panel</span>
         </button>
       </form>
     </div>
@@ -129,10 +153,13 @@ async function renderDashboard(container) {
       <div class="admin-dashboard__header">
         <div style="display: flex; align-items: center; gap: 12px;">
           <span class="navbar__logo" style="font-size: 1.25rem;">By<span style="color: var(--accent-primary);">Josh.</span></span>
-          <span class="badge badge--primary" style="font-size: 0.65rem; padding: 2px 8px;">Panel</span>
+          <span class="badge badge--primary" style="font-size: 0.65rem; padding: 2px 8px;">
+            <span class="lang-en">Admin</span><span class="lang-es">Panel</span>
+          </span>
         </div>
         <button id="admin-logout-btn" class="btn btn--outline" style="padding: 6px 14px; font-size: 0.75rem; height: 32px;">
-          Cerrar Sesión
+          <span class="lang-en">Log Out</span>
+          <span class="lang-es">Cerrar Sesión</span>
         </button>
       </div>
 
@@ -140,19 +167,23 @@ async function renderDashboard(container) {
       <div class="admin-tabs">
         <button class="admin-tab is-active" data-tab="create">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-          Generar Enlace
+          <span class="lang-en">Create Link</span>
+          <span class="lang-es">Generar Enlace</span>
         </button>
         <button class="admin-tab" data-tab="reviews">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
-          Reseñas
+          <span class="lang-en">Reviews</span>
+          <span class="lang-es">Reseñas</span>
         </button>
         <button class="admin-tab" data-tab="tokens">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-          Enlaces Activos
+          <span class="lang-en">Active Links</span>
+          <span class="lang-es">Enlaces Activos</span>
         </button>
         <button class="admin-tab" data-tab="settings">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          Configuración
+          <span class="lang-en">Settings</span>
+          <span class="lang-es">Configuración</span>
         </button>
       </div>
 
@@ -196,12 +227,16 @@ function renderCreateTab() {
   el.innerHTML = `
     <div style="padding: 6px 0;">
       <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 22px; line-height: 1.6;">
-        Genera un link único de reseña para entregarle a tu cliente tras el pago y entrega del trabajo.
+        <span class="lang-en">Generate a private single-use review link to send to your client after delivery and payment.</span>
+        <span class="lang-es">Genera un link único de reseña para entregarle a tu cliente tras el pago y entrega del trabajo.</span>
       </p>
 
       <form id="gen-token-form" style="display: flex; flex-direction: column; gap: 16px;">
         <div>
-          <label class="form-label">Servicio Realizado</label>
+          <label class="form-label">
+            <span class="lang-en">Service Delivered</span>
+            <span class="lang-es">Servicio Realizado</span>
+          </label>
           <div class="form-select-wrap">
             <select id="gen-service" class="form-input form-select">
               <option value="Thumbnails">Thumbnails ($4.50 USD)</option>
@@ -209,33 +244,42 @@ function renderCreateTab() {
               <option value="Headers & Banners">Headers & Banners ($7.00 USD)</option>
               <option value="UI & Overlays">UI & Overlays ($10.50 USD)</option>
               <option value="Brand Identity">Brand Identity / Logos</option>
-              <option value="Diseño Personalizado">Diseño Personalizado</option>
+              <option value="Custom Design">Custom Design / Personalizado</option>
             </select>
           </div>
         </div>
 
         <div>
-          <label class="form-label">Nota o Nombre del Cliente (Para tu control)</label>
-          <input type="text" id="gen-client-note" class="form-input" placeholder="Ej. Alex GD — Discord" maxlength="60" />
+          <label class="form-label">
+            <span class="lang-en">Client Note or Name (For your records)</span>
+            <span class="lang-es">Nota o Nombre del Cliente (Para tu control)</span>
+          </label>
+          <input type="text" id="gen-client-note" class="form-input" placeholder="e.g. Alex GD — Discord" maxlength="60" />
         </div>
 
         <button type="submit" class="btn btn--primary" id="btn-gen-link" style="width: 100%; height: 46px; margin-top: 4px;">
-          Generar Enlace de Reseña
+          <span class="lang-en">Generate Review Link</span>
+          <span class="lang-es">Generar Enlace de Reseña</span>
         </button>
       </form>
 
       <div id="gen-result-box" style="display: none; margin-top: 24px; padding: 18px; background: rgba(79, 195, 247, 0.05); border: 1px solid rgba(79, 195, 247, 0.2); border-radius: var(--radius-md);">
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
-          <span class="badge badge--accent" style="font-size: 0.7rem;">Enlace Creado</span>
+          <span class="badge badge--accent" style="font-size: 0.7rem;">
+            <span class="lang-en">Link Created</span>
+            <span class="lang-es">Enlace Creado</span>
+          </span>
         </div>
         <div style="display: flex; gap: 8px; align-items: center;">
           <input type="text" id="gen-link-output" class="form-input" readonly style="font-family: monospace; font-size: 0.8rem; background: rgba(0,0,0,0.35);" />
           <button class="btn btn--primary" id="btn-copy-link" style="white-space: nowrap; padding: 0 18px; height: 42px; font-size: 0.82rem;">
-            Copiar
+            <span class="lang-en">Copy</span>
+            <span class="lang-es">Copiar</span>
           </button>
         </div>
         <p style="margin: 10px 0 0; font-size: 0.78rem; color: var(--text-muted); line-height: 1.5;">
-          Envía este enlace a tu cliente por Discord o WhatsApp. Solo puede ser utilizado una vez.
+          <span class="lang-en">Send this link to your client on Discord or WhatsApp. It can only be used once.</span>
+          <span class="lang-es">Envía este enlace a tu cliente por Discord o WhatsApp. Solo puede ser utilizado una vez.</span>
         </p>
       </div>
     </div>
@@ -258,16 +302,16 @@ function renderCreateTab() {
     linkOutput.value = fullLink;
     resultBox.style.display = 'block';
 
-    copyBtn.textContent = 'Copiar';
+    copyBtn.innerHTML = '<span class="lang-en">Copy</span><span class="lang-es">Copiar</span>';
     copyBtn.classList.remove('btn--copied');
   });
 
   copyBtn.addEventListener('click', () => {
     navigator.clipboard.writeText(linkOutput.value).then(() => {
-      copyBtn.textContent = 'Copiado';
+      copyBtn.innerHTML = '<span class="lang-en">Copied</span><span class="lang-es">Copiado</span>';
       copyBtn.classList.add('btn--copied');
       setTimeout(() => {
-        copyBtn.textContent = 'Copiar';
+        copyBtn.innerHTML = '<span class="lang-en">Copy</span><span class="lang-es">Copiar</span>';
         copyBtn.classList.remove('btn--copied');
       }, 2500);
     });
@@ -282,7 +326,12 @@ async function loadReviewsTab() {
   const reviews = await getAllReviews();
 
   if (!reviews || reviews.length === 0) {
-    el.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">No hay reseñas registradas aún.</div>';
+    el.innerHTML = `
+      <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        <span class="lang-en">No reviews registered yet.</span>
+        <span class="lang-es">No hay reseñas registradas aún.</span>
+      </div>
+    `;
     return;
   }
 
@@ -300,20 +349,23 @@ async function loadReviewsTab() {
               </div>
             </div>
             <span class="badge ${r.status === 'approved' ? 'badge--accent' : 'badge--secondary'}" style="font-size: 0.65rem;">
-              ${r.status === 'approved' ? 'Publicada' : 'Oculta'}
+              <span class="lang-en">${r.status === 'approved' ? 'Published' : 'Hidden'}</span>
+              <span class="lang-es">${r.status === 'approved' ? 'Publicada' : 'Oculta'}</span>
             </span>
           </div>
           <p style="margin: 4px 0 0; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.5; font-style: italic;">
             “${escapeHtml(r.comment)}”
           </p>
           <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border-color);">
-            <span style="color: var(--text-muted); font-size: 0.75rem;">${escapeHtml(r.service || 'Diseño')}</span>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">${escapeHtml(r.service || 'Design')}</span>
             <div style="display: flex; gap: 8px;">
               <button class="btn btn--outline btn-toggle-status" data-id="${r.id}" data-current="${r.status}" style="padding: 4px 12px; font-size: 0.72rem; border-radius: var(--radius-full);">
-                ${r.status === 'approved' ? 'Ocultar' : 'Aprobar'}
+                <span class="lang-en">${r.status === 'approved' ? 'Hide' : 'Approve'}</span>
+                <span class="lang-es">${r.status === 'approved' ? 'Ocultar' : 'Aprobar'}</span>
               </button>
               <button class="btn btn--outline btn-delete-rev" data-id="${r.id}" style="padding: 4px 12px; font-size: 0.72rem; color: #f87171; border-color: rgba(248, 113, 113, 0.25); border-radius: var(--radius-full);">
-                Eliminar
+                <span class="lang-en">Delete</span>
+                <span class="lang-es">Eliminar</span>
               </button>
             </div>
           </div>
@@ -335,7 +387,9 @@ async function loadReviewsTab() {
 
   el.querySelectorAll('.btn-delete-rev').forEach(btn => {
     btn.addEventListener('click', async () => {
-      if (confirm('¿Deseas eliminar esta reseña permanentemente?')) {
+      const isEs = document.body.classList.contains('lang-es');
+      const msg = isEs ? '¿Deseas eliminar esta reseña permanentemente?' : 'Permanently delete this review?';
+      if (confirm(msg)) {
         await deleteReview(btn.dataset.id);
         await loadReviewsTab();
         renderReviewsCards();
@@ -352,7 +406,12 @@ async function loadTokensTab() {
   const tokens = await getAllTokens();
 
   if (!tokens || tokens.length === 0) {
-    el.innerHTML = '<div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">No has generado ningún enlace aún.</div>';
+    el.innerHTML = `
+      <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 0.9rem;">
+        <span class="lang-en">No active links generated yet.</span>
+        <span class="lang-es">No has generado ningún enlace aún.</span>
+      </div>
+    `;
     return;
   }
 
@@ -367,7 +426,8 @@ async function loadTokensTab() {
             <code style="font-size: 0.72rem; color: var(--text-muted); font-family: monospace;">${escapeHtml(t.token)}</code>
           </div>
           <span class="badge ${t.used ? 'badge--secondary' : 'badge--primary'}" style="font-size: 0.68rem; white-space: nowrap;">
-            ${t.used ? 'Utilizado' : 'Pendiente'}
+            <span class="lang-en">${t.used ? 'Used' : 'Pending'}</span>
+            <span class="lang-es">${t.used ? 'Utilizado' : 'Pendiente'}</span>
           </span>
         </div>
       `).join('')}
@@ -385,9 +445,13 @@ function renderSettingsTab() {
   el.innerHTML = `
     <div style="padding: 6px 0; display: flex; flex-direction: column; gap: 24px;">
       <div>
-        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">Base de Datos Supabase (Opcional)</h4>
+        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
+          <span class="lang-en">Supabase Cloud Database (Optional)</span>
+          <span class="lang-es">Base de Datos Supabase (Opcional)</span>
+        </h4>
         <p style="margin: 0 0 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
-          Para sincronizar las reseñas en la nube gratis, pega las credenciales de tu proyecto en Supabase. Si las dejas vacías, el sistema funciona de forma local.
+          <span class="lang-en">To store reviews in the free cloud database, paste your Supabase credentials below.</span>
+          <span class="lang-es">Para sincronizar las reseñas en la nube gratis, pega las credenciales de tu proyecto en Supabase.</span>
         </p>
         <div style="display: flex; flex-direction: column; gap: 12px;">
           <div>
@@ -399,20 +463,28 @@ function renderSettingsTab() {
             <input type="password" id="sb-key-input" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsIn..." value="${escapeHtml(currentSbKey)}" />
           </div>
           <button id="btn-save-sb" class="btn btn--primary" style="align-self: flex-start; padding: 10px 22px; font-size: 0.82rem;">
-            Guardar Conexión
+            <span class="lang-en">Save Connection</span>
+            <span class="lang-es">Guardar Conexión</span>
           </button>
         </div>
       </div>
 
       <div style="border-top: 1px solid var(--border-color); padding-top: 18px;">
-        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">Cambiar PIN de Acceso</h4>
+        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
+          <span class="lang-en">Change Admin PIN</span>
+          <span class="lang-es">Cambiar PIN de Acceso</span>
+        </h4>
         <div style="display: flex; gap: 10px; align-items: flex-end; margin-top: 10px;">
           <div style="flex: 1;">
-            <label class="form-label" style="font-size: 0.75rem;">Nuevo PIN</label>
-            <input type="password" id="new-pin-input" class="form-input" placeholder="Ej. 1234 o miClave" maxlength="30" />
+            <label class="form-label" style="font-size: 0.75rem;">
+              <span class="lang-en">New PIN</span>
+              <span class="lang-es">Nuevo PIN</span>
+            </label>
+            <input type="password" id="new-pin-input" class="form-input" placeholder="e.g. 1234" maxlength="30" />
           </div>
           <button id="btn-save-pin" class="btn btn--outline" style="padding: 10px 20px; font-size: 0.82rem;">
-            Actualizar PIN
+            <span class="lang-en">Update PIN</span>
+            <span class="lang-es">Actualizar PIN</span>
           </button>
         </div>
       </div>
@@ -423,14 +495,16 @@ function renderSettingsTab() {
     const url = document.getElementById('sb-url-input').value;
     const key = document.getElementById('sb-key-input').value;
     saveSupabaseConfig(url, key);
-    alert('Credenciales de Supabase guardadas con éxito.');
+    const isEs = document.body.classList.contains('lang-es');
+    alert(isEs ? 'Credenciales de Supabase guardadas con éxito.' : 'Supabase credentials saved successfully.');
   });
 
   document.getElementById('btn-save-pin')?.addEventListener('click', () => {
     const pin = document.getElementById('new-pin-input').value;
-    if (!pin) return alert('Por favor ingresa un PIN válido.');
+    const isEs = document.body.classList.contains('lang-es');
+    if (!pin) return alert(isEs ? 'Por favor ingresa un PIN válido.' : 'Please enter a valid PIN.');
     setAdminPIN(pin);
-    alert('PIN de administrador actualizado con éxito.');
+    alert(isEs ? 'PIN de administrador actualizado con éxito.' : 'Admin PIN updated successfully.');
     document.getElementById('new-pin-input').value = '';
   });
 }
