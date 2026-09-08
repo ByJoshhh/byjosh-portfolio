@@ -1,6 +1,7 @@
 /**
  * Reviews / Testimonials Section
- * Displays verified client feedback with star ratings and service tags.
+ * Displays verified client feedback with SVG star ratings and service tags.
+ * 100% Native ByJosh UI Theme — No Emojis, Clean SVG Line Icons
  */
 import { getApprovedReviews } from '../utils/reviewsDB.js';
 
@@ -18,15 +19,19 @@ export async function initReviews() {
             <span class="lang-es">Reseñas de <span class="text-gradient">Clientes</span></span>
           </h2>
           <div class="reviews__summary-badge" id="reviews-summary-badge">
-            <div class="reviews__stars-row">★★★★★</div>
+            <div class="reviews__stars-row">
+              ${renderStarSvg(5, 14)}
+            </div>
             <span class="reviews__rating-text">5.0 / 5.0</span>
-            <span class="reviews__verified-tag"><span class="lang-en">100% Verified</span><span class="lang-es">100% Verificado</span></span>
+            <span class="badge badge--primary" style="font-size: 0.68rem; padding: 2px 8px;">
+              <span class="lang-en">Verified</span><span class="lang-es">Verificado</span>
+            </span>
           </div>
         </div>
       </div>
 
       <div class="reviews__grid stagger-children fade-up" id="reviews-grid">
-        <div class="reviews__loading" style="color: var(--text-muted); font-size: 0.9rem;">
+        <div class="reviews__loading" style="color: var(--text-muted); font-size: 0.9rem; padding: 30px 0;">
           <span class="lang-en">Loading client feedback...</span><span class="lang-es">Cargando reseñas de clientes...</span>
         </div>
       </div>
@@ -64,7 +69,6 @@ export async function renderReviewsCards() {
     return;
   }
 
-  // Update average rating badge
   const totalRating = reviews.reduce((sum, r) => sum + (r.rating || 5), 0);
   const avgRating = (totalRating / reviews.length).toFixed(1);
   const badgeEl = document.getElementById('reviews-summary-badge');
@@ -73,10 +77,8 @@ export async function renderReviewsCards() {
   }
 
   container.innerHTML = reviews.map(r => {
-    const starsHtml = '★'.repeat(r.rating || 5) + '☆'.repeat(Math.max(0, 5 - (r.rating || 5)));
     const initial = (r.name || 'C').charAt(0).toUpperCase();
 
-    // Format date
     let dateStr = '';
     if (r.created_at) {
       try {
@@ -93,7 +95,11 @@ export async function renderReviewsCards() {
             <div class="review-card__meta">
               <div class="review-card__name-row">
                 <span class="review-card__name">${escapeHtml(r.name)}</span>
-                <span class="review-card__check" title="Verified Customer">✓</span>
+                <span class="review-card__check" title="Cliente Verificado">
+                  <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" stroke-width="3" fill="none">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                  </svg>
+                </span>
               </div>
               ${r.handle ? `<span class="review-card__handle">${escapeHtml(r.handle)}</span>` : ''}
             </div>
@@ -101,7 +107,9 @@ export async function renderReviewsCards() {
           <span class="review-card__date">${dateStr}</span>
         </div>
 
-        <div class="review-card__stars">${starsHtml}</div>
+        <div class="review-card__stars">
+          ${renderStarSvg(r.rating || 5, 14)}
+        </div>
 
         <p class="review-card__comment">“${escapeHtml(r.comment)}”</p>
 
@@ -111,6 +119,19 @@ export async function renderReviewsCards() {
       </div>
     `;
   }).join('');
+}
+
+function renderStarSvg(count, size = 14) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const filled = i <= count;
+    html += `
+      <svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="${filled ? '#4fc3f7' : 'none'}" stroke="${filled ? '#4fc3f7' : 'rgba(255,255,255,0.2)'}" stroke-width="1.5">
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+      </svg>
+    `;
+  }
+  return html;
 }
 
 function escapeHtml(str) {

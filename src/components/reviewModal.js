@@ -1,7 +1,7 @@
 /**
  * Client Review Modal
  * Activated when ?review=TOKEN is in the URL.
- * Allows verified clients with a valid single-use link to submit feedback.
+ * 100% Native ByJosh UI Theme — Clean SVG Line Icons, Vector Stars, No Emojis
  */
 import { validateToken, submitReview } from '../utils/reviewsDB.js';
 import { renderReviewsCards } from '../sections/reviews.js';
@@ -18,18 +18,22 @@ export async function initReviewModal() {
 
   if (!token) return;
 
-  // Create Modal Container
   const modal = document.createElement('div');
   modal.id = 'client-review-modal';
   modal.className = 'custom-modal is-open';
   modal.innerHTML = `
     <div class="custom-modal__backdrop"></div>
     <div class="custom-modal__box">
-      <button class="custom-modal__close" id="review-modal-close" aria-label="Close">&times;</button>
+      <button class="custom-modal__close" id="review-modal-close" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
       <div id="review-modal-content">
-        <div class="review-modal__loading">
+        <div class="review-modal__loading" style="text-align: center; padding: 40px 10px;">
           <div class="custom-spinner"></div>
-          <p style="margin-top: 14px; color: var(--text-secondary); font-size: 0.9rem;">Verificando enlace de cliente...</p>
+          <p style="margin-top: 16px; color: var(--text-secondary); font-size: 0.88rem;">Verificando enlace de cliente...</p>
         </div>
       </div>
     </div>
@@ -43,7 +47,6 @@ export async function initReviewModal() {
   function closeModal() {
     modal.classList.remove('is-open');
     setTimeout(() => modal.remove(), 300);
-    // Remove query param cleanly
     const cleanUrl = window.location.pathname;
     window.history.replaceState({}, document.title, cleanUrl);
   }
@@ -51,18 +54,25 @@ export async function initReviewModal() {
   backdrop.addEventListener('click', closeModal);
   closeBtn.addEventListener('click', closeModal);
 
-  // Validate Token
   const validation = await validateToken(token);
 
   if (!validation.valid) {
     contentEl.innerHTML = `
-      <div style="text-align: center; padding: 20px 10px;">
-        <div class="modal-icon modal-icon--warning">⚠️</div>
-        <h3 style="margin: 12px 0 8px; color: var(--text-primary);">Enlace no disponible</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px;">
+      <div style="text-align: center; padding: 16px 6px;">
+        <div class="modal-icon-badge" style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.08); color: #ef4444;">
+          <svg viewBox="0 0 24 24" width="28" height="28" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+            <line x1="12" y1="9" x2="12" y2="13"></line>
+            <line x1="12" y1="17" x2="12.01" y2="17"></line>
+          </svg>
+        </div>
+        <h3 style="margin: 12px 0 6px; color: var(--text-primary); font-family: var(--font-display); font-size: 1.4rem;">Enlace no disponible</h3>
+        <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6; margin-bottom: 24px;">
           ${escapeHtml(validation.error || 'Este enlace ya fue utilizado o no es válido.')}
         </p>
-        <button class="btn btn--primary" id="btn-err-close" style="width: 100%;">Explorar Portafolio</button>
+        <button class="btn btn--primary" id="btn-err-close" style="width: 100%; height: 44px;">
+          Explorar Portafolio
+        </button>
       </div>
     `;
     document.getElementById('btn-err-close')?.addEventListener('click', closeModal);
@@ -71,60 +81,56 @@ export async function initReviewModal() {
 
   const tokenData = validation.tokenData;
   const serviceName = tokenData.service || 'Diseño Gráfico';
-
-  // Render Review Form
   let currentRating = 5;
 
   contentEl.innerHTML = `
     <div class="review-form">
       <div class="review-form__header">
-        <span class="review-form__badge">${escapeHtml(serviceName)}</span>
-        <h3 class="review-form__title">¡Deja tu Reseña!</h3>
+        <span class="section__tag" style="margin-bottom: 6px;">Valoración de Cliente</span>
+        <h3 class="review-form__title" style="font-family: var(--font-display);">Comparte tu Experiencia</h3>
         <p class="review-form__subtitle">
-          Gracias por confiar en <strong>ByJosh</strong>. Tu opinión sincera me ayuda muchísimo a seguir creando contenido y diseños de calidad.
+          Servicio: <strong style="color: var(--accent-primary);">${escapeHtml(serviceName)}</strong>
         </p>
       </div>
 
       <form id="review-submit-form" style="display: flex; flex-direction: column; gap: 18px;">
-        <!-- Star Rating Picker -->
+        <!-- Star Rating Picker using Clean SVGs -->
         <div>
-          <label class="form-label">Tu Calificación</label>
+          <label class="form-label">Calificación</label>
           <div class="star-rating-picker" id="star-picker">
-            <span class="star-btn active" data-value="1">★</span>
-            <span class="star-btn active" data-value="2">★</span>
-            <span class="star-btn active" data-value="3">★</span>
-            <span class="star-btn active" data-value="4">★</span>
-            <span class="star-btn active" data-value="5">★</span>
+            ${[1, 2, 3, 4, 5].map(val => `
+              <button type="button" class="star-btn active" data-value="${val}" aria-label="${val} estrellas">
+                <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" stroke="none">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+              </button>
+            `).join('')}
           </div>
-          <div class="star-rating-caption" id="star-caption">¡Excelente trabajo! (5/5)</div>
+          <div class="star-rating-caption" id="star-caption">Excelente trabajo (5/5)</div>
         </div>
 
-        <!-- Name / Nickname -->
         <div>
-          <label class="form-label" for="rev-author-name">Tu Nombre o Apodo *</label>
-          <input type="text" id="rev-author-name" class="form-input" placeholder="Ej. Kroh, Alex, Juan..." required maxlength="40" />
+          <label class="form-label" for="rev-author-name">Nombre o Apodo *</label>
+          <input type="text" id="rev-author-name" class="form-input" placeholder="Ej. Kroh, Alex..." required maxlength="40" />
         </div>
 
-        <!-- Social Media Handle -->
         <div>
-          <label class="form-label" for="rev-author-handle">Tu Red Social o Discord (Opcional)</label>
-          <input type="text" id="rev-author-handle" class="form-input" placeholder="Ej. @tu_usuario o Discord: TuTag#1234" maxlength="50" />
+          <label class="form-label" for="rev-author-handle">Red Social o Discord (Opcional)</label>
+          <input type="text" id="rev-author-handle" class="form-input" placeholder="Ej. @usuario o Discord: Tag#0001" maxlength="50" />
         </div>
 
-        <!-- Review Comment -->
         <div>
           <label class="form-label" for="rev-comment">Tu Opinión sobre el Trabajo *</label>
-          <textarea id="rev-comment" class="form-input form-textarea" rows="4" placeholder="¿Qué te pareció el diseño, la rapidez y el trato?..." required maxlength="600"></textarea>
+          <textarea id="rev-comment" class="form-input form-textarea" rows="4" placeholder="¿Qué te pareció el diseño y la atención?..." required maxlength="600"></textarea>
         </div>
 
-        <button type="submit" class="btn btn--primary" id="btn-submit-review" style="width: 100%; padding: 14px; font-weight: 700; font-size: 1rem;">
-          Publicar Reseña ★
+        <button type="submit" class="btn btn--primary" id="btn-submit-review" style="width: 100%; height: 46px; margin-top: 4px;">
+          Publicar Reseña
         </button>
       </form>
     </div>
   `;
 
-  // Interactive Stars Logic
   const starPicker = document.getElementById('star-picker');
   const starBtns = starPicker.querySelectorAll('.star-btn');
   const starCaption = document.getElementById('star-caption');
@@ -133,8 +139,8 @@ export async function initReviewModal() {
     1: 'Mala experiencia (1/5)',
     2: 'Regular (2/5)',
     3: 'Bueno (3/5)',
-    4: '¡Muy bueno! (4/5)',
-    5: '¡Excelente trabajo! (5/5)'
+    4: 'Muy bueno (4/5)',
+    5: 'Excelente trabajo (5/5)'
   };
 
   function updateStars(val) {
@@ -159,7 +165,6 @@ export async function initReviewModal() {
     updateStars(currentRating);
   });
 
-  // Form Submission
   const form = document.getElementById('review-submit-form');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -183,29 +188,35 @@ export async function initReviewModal() {
 
       if (res.success) {
         contentEl.innerHTML = `
-          <div style="text-align: center; padding: 24px 10px;">
-            <div class="modal-icon modal-icon--success">🎉</div>
-            <h3 style="margin: 12px 0 8px; color: var(--text-primary);">¡Reseña Recibida!</h3>
-            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin-bottom: 24px;">
-              Muchísimas gracias por tus comentarios, <strong>${escapeHtml(name)}</strong>. Tu valoración ya está registrada y publicada en el portafolio.
+          <div style="text-align: center; padding: 20px 6px;">
+            <div class="modal-icon-badge" style="color: var(--accent-primary);">
+              <svg viewBox="0 0 24 24" width="30" height="30" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <span class="section__tag" style="margin-bottom: 6px;">Publicada</span>
+            <h3 style="margin: 0 0 8px; color: var(--text-primary); font-family: var(--font-display); font-size: 1.4rem;">¡Gracias por tu Reseña!</h3>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px;">
+              Tus comentarios ayudan a otros creadores a conocer la calidad de mi trabajo.
             </p>
-            <button class="btn btn--primary" id="btn-done-close" style="width: 100%;">Ver mi Reseña en la Web</button>
+            <button class="btn btn--primary" id="btn-done-close" style="width: 100%; height: 44px;">
+              Ver en la Web
+            </button>
           </div>
         `;
 
         document.getElementById('btn-done-close')?.addEventListener('click', () => {
           closeModal();
-          // Scroll smoothly to reviews section
           document.getElementById('reviews')?.scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Re-render reviews section on page
         renderReviewsCards();
       }
     } catch (err) {
       alert('Ocurrió un error al enviar la reseña. Inténtalo de nuevo.');
       btn.disabled = false;
-      btn.textContent = 'Publicar Reseña ★';
+      btn.textContent = 'Publicar Reseña';
     }
   });
 }
