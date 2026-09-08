@@ -1,9 +1,55 @@
 /**
- * Pricing section — honest pricing cards.
+ * Pricing section — dynamic honest pricing cards connected to Supabase CMS.
  */
-export function initPricing() {
+import { getPricingPlans } from '../utils/cmsDB.js';
+
+export async function initPricing() {
   const section = document.getElementById('pricing');
   if (!section) return;
+
+  const plans = await getPricingPlans();
+  renderPricing(section, plans);
+
+  // Listen for live pricing updates from admin modal
+  window.addEventListener('byjosh:pricing_updated', async () => {
+    const updatedPlans = await getPricingPlans();
+    renderPricing(section, updatedPlans);
+  });
+}
+
+export function renderPricing(section, plans) {
+  const gridHtml = (plans || []).map(p => {
+    const isPop = Boolean(p.popular);
+    const borderStyle = isPop ? 'border: 2px solid var(--accent-primary);' : 'border: 1px solid var(--border-color);';
+    const btnClass = isPop ? 'btn btn--primary' : 'btn btn--outline';
+    const badgeHtml = isPop ? `
+      <span style="background: var(--accent-gradient); color: #0b0d14; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;">
+        <span class="lang-en">Popular</span><span class="lang-es">Popular</span>
+      </span>
+    ` : '';
+
+    return `
+      <div class="service-card" style="padding: 32px; ${borderStyle} display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+            <h3 class="service-card__title" style="margin-bottom: 0;">
+              <span class="lang-en">${p.title_en}</span><span class="lang-es">${p.title_es}</span>
+            </h3>
+            ${badgeHtml}
+          </div>
+          <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;">
+            <span class="lang-en">${p.category_en}</span><span class="lang-es">${p.category_es}</span>
+          </p>
+          <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">
+            $${Number(p.price).toFixed(2).replace(/\.00$/, '')}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span>
+          </div>
+        </div>
+        <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="${btnClass}" style="width: 100%;">
+          <span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span>
+        </button>
+      </div>
+    `;
+  }).join('');
 
   section.innerHTML = `
     <div class="container" style="max-width: var(--container-width); margin: 0 auto; padding: 0 var(--container-padding);">
@@ -16,52 +62,7 @@ export function initPricing() {
       </div>
       
       <div class="pricing__grid stagger-children fade-up" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 40px;">
-        
-        <!-- Thumbnails -->
-        <div class="service-card" style="padding: 32px; border: 2px solid var(--accent-primary); display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-              <h3 class="service-card__title" style="margin-bottom: 0;"><span class="lang-en">Thumbnails</span><span class="lang-es">Miniaturas</span></h3>
-              <span style="background: var(--accent-gradient); color: #0b0d14; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;"><span class="lang-en">Popular</span><span class="lang-es">Popular</span></span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Geometry Dash & Gaming</span><span class="lang-es">Geometry Dash y Gaming</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$4.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
-          </div>
-          <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--primary" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
-        </div>
-
-        <!-- AVIS / PFPs -->
-        <div class="service-card" style="padding: 32px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <h3 class="service-card__title" style="margin-bottom: 8px;"><span class="lang-en">Profile Pictures / AVIS</span><span class="lang-es">Profile Pictures / AVIS</span></h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">PFPs & Icons</span><span class="lang-es">PFPs e Íconos</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$4<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
-          </div>
-          <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--outline" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
-        </div>
-
-        <!-- Headers & Banners -->
-        <div class="service-card" style="padding: 32px; border: 2px solid var(--accent-primary); display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-              <h3 class="service-card__title" style="margin-bottom: 0;"><span class="lang-en">Headers & Banners</span><span class="lang-es">Headers & Banners</span></h3>
-              <span style="background: var(--accent-gradient); color: #0b0d14; font-size: 0.6rem; font-weight: 800; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; letter-spacing: 0.5px; white-space: nowrap;"><span class="lang-en">Popular</span><span class="lang-es">Popular</span></span>
-            </div>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Twitter, YouTube, Twitch</span><span class="lang-es">Twitter, YouTube, Twitch</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$7<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
-          </div>
-          <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--primary" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
-        </div>
-
-        <!-- UI / Overlays -->
-        <div class="service-card" style="padding: 32px; border: 1px solid var(--border-color); display: flex; flex-direction: column; justify-content: space-between;">
-          <div>
-            <h3 class="service-card__title" style="margin-bottom: 8px;"><span class="lang-en">UI & Overlays</span><span class="lang-es">Interfaces & Overlays</span></h3>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;"><span class="lang-en">Stream Packs & Web UI</span><span class="lang-es">Stream Packs & Web UI</span></p>
-            <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">$10.50<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span></div>
-          </div>
-          <button onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'})" class="btn btn--outline" style="width: 100%;"><span class="lang-en">Order Now</span><span class="lang-es">Ordenar Ahora</span></button>
-        </div>
+        ${gridHtml}
       </div>
 
       <div class="fade-up" style="text-align: left; margin-top: 32px; padding: 20px 24px; background: rgba(255, 193, 7, 0.08); border-left: 4px solid #ffc107; border-radius: 0 var(--radius-lg) var(--radius-lg) 0;">

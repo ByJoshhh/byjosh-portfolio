@@ -2,11 +2,9 @@
  * Projects gallery â€” updated with cool-toned gradients.
  */
 import { scrollObserver } from '../utils/animations.js';
-export function initProjects() {
-  const section = document.getElementById('projects');
-  if (!section) return;
+import { getDynamicProjects, getCategories } from '../utils/cmsDB.js';
 
-  const data = [
+const STATIC_DATA = [
     { title: 'Still Home - G2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Still-Home-G2-clean.webp?v=2', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'BDD vs Chovy', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/BPD-vs-Chovy.webp', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'The Golden', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-New.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
@@ -104,7 +102,32 @@ export function initProjects() {
     { title: 'Calex', cat: 'anime-backgrounds', img: '/images/Anime-Backgrounds/CALEXBG.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' }
   ];
 
+export async function initProjects() {
+  const section = document.getElementById('projects');
+  if (!section) return;
+
+  const [dynProjs, categories] = await Promise.all([
+    getDynamicProjects(),
+    getCategories()
+  ]);
+
+  renderProjectsGallery(section, [...(dynProjs || []), ...STATIC_DATA], categories);
+
+  window.addEventListener('byjosh:projects_updated', async () => {
+    const [freshDyn, freshCats] = await Promise.all([
+      getDynamicProjects(),
+      getCategories()
+    ]);
+    renderProjectsGallery(section, [...(freshDyn || []), ...STATIC_DATA], freshCats);
+  });
+}
+
+export function renderProjectsGallery(section, data, categories) {
   const getCategoryLabel = (cat) => {
+    const matched = (categories || []).find(c => cat.includes(c.id));
+    if (matched) {
+      return `<span class="lang-en">${matched.name_en}</span><span class="lang-es">${matched.name_es}</span>`;
+    }
     if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">Diseño de Miniaturas</span>';
     if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">Diseño de Header</span>';
     if (cat.includes('discord-banners')) return '<span class="lang-en">Discord Banner</span><span class="lang-es">Banner de Discord</span>';
@@ -124,14 +147,12 @@ export function initProjects() {
       <div class="projects__filters fade-up">
         <button class="filter-btn filter-btn--active" data-filter="featured"><span class="lang-en">Featured</span><span class="lang-es">Destacados</span></button>
         <button class="filter-btn" data-filter="all"><span class="lang-en">All</span><span class="lang-es">Todos</span></button>
-        <button class="filter-btn" data-filter="geometry-dash">Geometry Dash <span class="filter-badge">NEW</span></button>
-        <button class="filter-btn" data-filter="esports">E-Sports <span class="filter-badge">NEW</span></button>
-        <button class="filter-btn" data-filter="thumbnails"><span class="lang-en">Thumbnails</span><span class="lang-es">Miniaturas</span> <span class="filter-badge">NEW</span></button>
-        <button class="filter-btn" data-filter="discord-banners">Discord Banners</button>
-        <button class="filter-btn" data-filter="anime-backgrounds"><span class="lang-en">Anime Backgrounds</span><span class="lang-es">Fondos de Anime</span></button>
-        <button class="filter-btn" data-filter="pfps">AVIs/pfps</button>
-        <button class="filter-btn" data-filter="banners">Banners</button>
-        <button class="filter-btn" data-filter="headers">Headers</button>
+        ${(categories || []).map(c => `
+          <button class="filter-btn" data-filter="${c.id}">
+            <span class="lang-en">${c.name_en}</span><span class="lang-es">${c.name_es}</span>
+            ${c.badge ? `<span class="filter-badge">${c.badge}</span>` : ''}
+          </button>
+        `).join('')}
       </div>
       <div class="projects__grid">
         ${data
