@@ -14,12 +14,15 @@ import { initAbout } from './sections/about.js';
 import { initProjects } from './sections/projects.js';
 import { initServices } from './sections/services.js';
 import { initPricing } from './sections/pricing.js';
+import { initReviews } from './sections/reviews.js';
 import { initFaq } from './sections/faq.js';
 import { initContact } from './sections/contact.js';
 
 import { initAnimations, initSmoothScroll } from './utils/animations.js';
 import { animateCounters } from './utils/counter.js';
 import { initMusicPlayer } from './components/musicPlayer.js';
+import { initReviewModal } from './components/reviewModal.js';
+import { initAdminModal } from './components/adminModal.js';
 
 // --- Preloader Logic ---
 function initPreloader() {
@@ -79,9 +82,14 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjects();
   initServices();
   initPricing();
+  initReviews();
   initFaq();
   initContact();
 
-  // 3 — Utilities
+  // 3 — Modals & URL Listeners
+  initReviewModal();
+  initAdminModal();
+
+  // 4 — Utilities
   initSmoothScroll();
 });

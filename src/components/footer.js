@@ -22,6 +22,7 @@ export function initFooter() {
           <a href="https://www.youtube.com/@ByJoshhh" target="_blank" aria-label="YouTube">YT</a>
           <a href="https://www.behance.net/byjoshhh_" target="_blank" aria-label="Behance">BE</a>
           <a href="#" aria-label="Discord" title="Discord: ByJoshhh_">DC</a>
+          <a href="?admin" id="footer-admin-trigger" aria-label="Admin Panel" title="Admin Panel" style="opacity: 0.25; font-size: 0.8rem; margin-left: 6px;">⚙</a>
         </div>
       </div>
     </div>

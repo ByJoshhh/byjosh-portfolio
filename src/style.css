@@ -2079,7 +2079,6 @@ body.lang-es .lang-en { display: none !important; }
   border: none;
 }
 
-/* ── Mobile Adaptations ── */
 @media (max-width: 480px) {
   #music-player {
     bottom: 16px;
@@ -2096,6 +2095,408 @@ body.lang-es .lang-en { display: none !important; }
     font-size: 0.68rem;
   }
 }
+
+/* ==============================================================================
+   REVIEWS & TESTIMONIALS SECTION
+   ============================================================================== */
+.reviews__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.reviews__summary-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-color);
+  padding: 8px 16px;
+  border-radius: 50px;
+  backdrop-filter: blur(10px);
+}
+
+.reviews__stars-row {
+  color: #f59e0b;
+  font-size: 0.95rem;
+  letter-spacing: 2px;
+}
+
+.reviews__rating-text {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+}
+
+.reviews__verified-tag {
+  font-size: 0.7rem;
+  color: var(--accent-primary);
+  background: rgba(74, 222, 128, 0.1);
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.review-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s, box-shadow 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.review-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(79, 195, 247, 0.35);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+}
+
+.review-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 14px;
+}
+
+.review-card__user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.review-card__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--accent-gradient);
+  color: #0b0d14;
+  font-weight: 800;
+  display: grid;
+  place-items: center;
+  font-size: 1.05rem;
+  box-shadow: 0 0 12px rgba(79, 195, 247, 0.4);
+}
+
+.review-card__meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-card__name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.review-card__name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.review-card__check {
+  color: var(--accent-primary);
+  font-size: 0.75rem;
+  font-weight: 900;
+  background: rgba(74, 222, 128, 0.15);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.review-card__handle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.review-card__date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.review-card__stars {
+  color: #f59e0b;
+  font-size: 1rem;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.review-card__comment {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  margin: 0 0 20px 0;
+  font-style: italic;
+  flex-grow: 1;
+}
+
+.review-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.review-card__service-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.reviews__footer-banner {
+  background: rgba(79, 195, 247, 0.05);
+  border: 1px dashed rgba(79, 195, 247, 0.25);
+  border-radius: var(--radius-md);
+  padding: 16px 22px;
+}
+
+.reviews__banner-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ==============================================================================
+   MODALS (CLIENT REVIEW & ADMIN DASHBOARD)
+   ============================================================================== */
+.custom-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.custom-modal.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.custom-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(7, 8, 12, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.custom-modal__box {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 30px rgba(79, 195, 247, 0.1);
+  transform: translateY(20px) scale(0.96);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.custom-modal.is-open .custom-modal__box {
+  transform: translateY(0) scale(1);
+}
+
+.custom-modal__box--large {
+  max-width: 620px;
+}
+
+.custom-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.custom-modal__close:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.05);
+}
+
+.modal-icon {
+  font-size: 2.8rem;
+  margin-bottom: 8px;
+}
+
+/* ── Form Elements ── */
+.form-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 10px rgba(79, 195, 247, 0.25);
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+/* ── Star Rating Picker ── */
+.star-rating-picker {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.star-btn {
+  font-size: 1.8rem;
+  color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  transition: color 0.2s, transform 0.15s;
+  user-select: none;
+}
+
+.star-btn:hover {
+  transform: scale(1.2);
+}
+
+.star-btn.active {
+  color: #f59e0b;
+  text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+}
+
+.star-rating-caption {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ── Review Form Header ── */
+.review-form__badge {
+  display: inline-block;
+  background: rgba(79, 195, 247, 0.12);
+  color: var(--accent-primary);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.review-form__title {
+  margin: 0 0 8px;
+  color: var(--text-primary);
+  font-size: 1.4rem;
+}
+
+.review-form__subtitle {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  margin: 0 0 20px 0;
+}
+
+/* ── Admin Dashboard ── */
+.admin-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 16px;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 16px;
+}
+
+.admin-tab {
+  background: none;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.admin-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.admin-tab.is-active {
+  color: var(--accent-primary);
+  background: rgba(79, 195, 247, 0.1);
+  border-color: rgba(79, 195, 247, 0.3);
+}
+
+/* ── Spinner ── */
+.custom-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 
 
 

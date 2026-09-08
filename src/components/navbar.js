@@ -13,6 +13,7 @@ export function initNavbar() {
         <a href="#about" class="navbar__link"><span class="lang-en">About</span><span class="lang-es">Sobre mí</span></a>
         <a href="#services" class="navbar__link"><span class="lang-en">Services</span><span class="lang-es">Servicios</span></a>
         <a href="#pricing" class="navbar__link"><span class="lang-en">Pricing</span><span class="lang-es">Precios</span></a>
+        <a href="#reviews" class="navbar__link"><span class="lang-en">Reviews</span><span class="lang-es">Reseñas</span></a>
         <a href="#faq" class="navbar__link"><span class="lang-en">FAQ</span><span class="lang-es">FAQ</span></a>
         <a href="#contact" class="navbar__link"><span class="lang-en">Contact</span><span class="lang-es">Contacto</span></a>
         <button id="theme-toggle" class="btn btn--outline" aria-label="Toggle Theme" style="padding: 6px 10px; display: flex; align-items: center;">
