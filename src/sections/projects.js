@@ -5,9 +5,10 @@ import { scrollObserver } from '../utils/animations.js';
 import { getDynamicProjects, getCategories } from '../utils/cmsDB.js';
 
 const STATIC_DATA = [
+    { title: 'The Golden - Viipr', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-Viipr.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
     { title: 'Still Home - G2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Still-Home-G2-clean.webp?v=2', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'BDD vs Chovy', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/BPD-vs-Chovy.webp', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
-    { title: 'The Golden', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-New.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
+    { title: 'The Golden', cat: 'geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-New.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)' },
     { title: 'Wasureta by Helpecasus', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Wasureta-By-Helpecasus.webp', bg: 'linear-gradient(135deg, #2d1b4e, #1a1e3a)', isNew: true },
     { title: 'Junkos Thumbnail 1', cat: 'esports,thumbnails', img: '/images/E-SPORTS/Jankos-LEAGUE-OF-LEGENDS.webp', bg: 'linear-gradient(135deg, #1a1e3a, #0b0d14)', isNew: true },
     { title: 'Junkos Thumbnail 2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/JANKOS-THUMBNAIL2.webp', bg: 'linear-gradient(135deg, #ff758c, #1a1e3a)', isNew: true },
