@@ -22,7 +22,7 @@ export function initContact() {
               <span class="contact__detail-icon">
                 <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
               </span>
-              <a href="mailto:byjoshmcpeyt456@gmail.com" class="text-hover">byjoshmcpeyt456@gmail.com</a>
+              <a href="mailto:byjoshhh456@gmail.com" class="text-hover">byjoshhh456@gmail.com</a>
             </div>
             <div class="contact__detail">
               <span class="contact__detail-icon">
