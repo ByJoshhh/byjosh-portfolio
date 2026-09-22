@@ -18,7 +18,7 @@ export function initFooter() {
       <div class="footer__bottom">
         <p>&copy; ${new Date().getFullYear()} ByJosh. <span class="lang-en">All rights reserved.</span><span class="lang-es">Todos los derechos reservados.</span></p>
         <div class="footer__socials">
-          <a href="https://x.com/ByJoshhh_" target="_blank" aria-label="Twitter (X)">X</a>
+          <a href="https://x.com/ByJoshDES" target="_blank" aria-label="Twitter (X)">X</a>
           <a href="https://www.youtube.com/@ByJoshhh" target="_blank" aria-label="YouTube">YT</a>
           <a href="https://www.behance.net/byjoshhh_" target="_blank" aria-label="Behance">BE</a>
           <a href="#" aria-label="Discord" title="Discord: ByJoshhh_">DC</a>
