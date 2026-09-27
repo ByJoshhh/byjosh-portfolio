@@ -219,6 +219,15 @@ export function renderProjectsGallery(section, data, categories) {
     </div>
   `;
 
+  // The gallery is rendered asynchronously after the initial page load. If the
+  // fade-up observer has already scanned the document, these new elements must
+  // be registered here or they remain at opacity: 0 while the cards appear.
+  if (scrollObserver) {
+    section
+      .querySelectorAll('.section__header.fade-up, .projects__filters.fade-up')
+      .forEach((element) => scrollObserver.observe(element));
+  }
+
   const btns = section.querySelectorAll('.filter-btn');
   const cards = section.querySelectorAll('.project-card');
 
