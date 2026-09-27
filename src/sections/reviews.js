@@ -106,7 +106,7 @@ export async function renderReviewsCards() {
       <div class="review-card">
         <div class="review-card__header">
           <div class="review-card__user">
-            <div class="review-card__avatar">${initial}</div>
+            <div class="review-card__avatar">${escapeHtml(initial)}</div>
             <div class="review-card__meta">
               <div class="review-card__name-row">
                 <span class="review-card__name">${escapeHtml(r.name)}</span>

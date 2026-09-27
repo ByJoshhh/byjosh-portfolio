@@ -258,16 +258,16 @@ export async function initReviewModal() {
               </svg>
             </div>
             <span class="section__tag" style="margin-bottom: 6px;">
-              <span class="lang-en">Published</span>
-              <span class="lang-es">Publicada</span>
+              <span class="lang-en">Received for review</span>
+              <span class="lang-es">Recibida para revisión</span>
             </span>
             <h3 style="margin: 0 0 8px; color: var(--text-primary); font-family: var(--font-display); font-size: 1.4rem;">
-              <span class="lang-en">Thank You for Your Review!</span>
-              <span class="lang-es">¡Gracias por tu Reseña!</span>
+              <span class="lang-en">Thank You for Your Feedback!</span>
+              <span class="lang-es">¡Gracias por tu opinión!</span>
             </h3>
             <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin-bottom: 24px;">
-              <span class="lang-en">Your feedback helps other creators see the quality of my work.</span>
-              <span class="lang-es">Tus comentarios ayudan a otros creadores a conocer la calidad de mi trabajo.</span>
+              <span class="lang-en">Your review will appear after moderation.</span>
+              <span class="lang-es">Tu reseña aparecerá después de ser moderada.</span>
             </p>
             <button class="btn btn--primary" id="btn-done-close" style="width: 100%; height: 44px;">
               <span class="lang-en">View on Website</span>

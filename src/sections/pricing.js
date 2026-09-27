@@ -3,6 +3,15 @@
  */
 import { getPricingPlans } from '../utils/cmsDB.js';
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export async function initPricing() {
   const section = document.getElementById('pricing');
   if (!section) return;
@@ -33,12 +42,12 @@ export function renderPricing(section, plans) {
         <div>
           <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
             <h3 class="service-card__title" style="margin-bottom: 0;">
-              <span class="lang-en">${p.title_en}</span><span class="lang-es">${p.title_es}</span>
+              <span class="lang-en">${escapeHtml(p.title_en)}</span><span class="lang-es">${escapeHtml(p.title_es)}</span>
             </h3>
             ${badgeHtml}
           </div>
           <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;">
-            <span class="lang-en">${p.category_en}</span><span class="lang-es">${p.category_es}</span>
+            <span class="lang-en">${escapeHtml(p.category_en)}</span><span class="lang-es">${escapeHtml(p.category_es)}</span>
           </p>
           <div style="font-family: var(--font-display); font-size: 2.5rem; font-weight: 800; color: var(--text-primary); margin-bottom: 24px;">
             $${Number(p.price).toFixed(2).replace(/\.00$/, '')}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 500;"> USD</span>

@@ -1,7 +1,7 @@
 /**
  * Admin Panel Modal for ByJosh (Full CMS Suite)
  * Activated by ?admin or clicking the footer trigger.
- * Protected by PIN.
+ * Admin privileges are checked by Supabase Auth and RLS.
  * 100% Native ByJosh UI Theme — Bilingual (English / Spanish)
  * 
  * Features:
@@ -11,22 +11,19 @@
  *  4. Categories Manager (Add custom categories & filter badges)
  *  5. Reviews Moderation & Manual Addition
  *  6. Single-Use Tokens Management
- *  7. Supabase Credentials & Security PIN
+ *  7. Supabase Auth and database security guidance
  */
 import {
-  getAdminPIN,
-  setAdminPIN,
-  getSupabaseConfig,
-  saveSupabaseConfig,
   generateReviewToken,
   getAllReviews,
   getAllTokens,
+  addAdminReview,
   updateReviewStatus,
   deleteReview,
   toggleTokenUsed,
   deleteToken,
-  submitReview
 } from '../utils/reviewsDB.js';
+import { hasAdminAccess, signInAdmin, signOutAdmin } from '../utils/supabaseClient.js';
 import {
   getPricingPlans,
   updatePricingPlan,
@@ -139,15 +136,15 @@ export function openAdminModal() {
   };
   window.addEventListener('keydown', escHandler);
 
-  const isAuth = sessionStorage.getItem('byjosh_admin_auth') === '1';
-  if (isAuth) {
-    renderDashboard(bodyEl);
-  } else {
-    renderPinScreen(bodyEl);
-  }
+  bodyEl.innerHTML = '<div style="padding: 30px; text-align: center;"><div class="custom-spinner"></div></div>';
+  hasAdminAccess().then(isAdmin => {
+    if (!document.body.contains(modal)) return;
+    if (isAdmin) renderDashboard(bodyEl);
+    else renderAdminLogin(bodyEl);
+  });
 }
 
-function renderPinScreen(container) {
+function renderAdminLogin(container) {
   container.innerHTML = `
     <div style="text-align: center; padding: 12px 6px;">
       <div class="modal-icon-badge">
@@ -165,41 +162,52 @@ function renderPinScreen(container) {
         <span class="lang-es">Panel de Administración</span>
       </h3>
       <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 26px;">
-        <span class="lang-en">Enter your master PIN to manage prices, projects, links and reviews.</span>
-        <span class="lang-es">Ingresa tu PIN maestro para gestionar precios, trabajos, enlaces y reseñas.</span>
+        <span class="lang-en">Sign in with your authorized admin account.</span>
+        <span class="lang-es">Inicia sesión con tu cuenta de administrador autorizada.</span>
       </p>
 
-      <form id="admin-pin-form" style="max-width: 300px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;">
-        <input type="password" id="admin-pin-input" class="form-input" placeholder="••••" required autofocus style="text-align: center; letter-spacing: 6px; font-size: 1.3rem; height: 46px;" />
-        <div id="pin-error" style="color: #ef4444; font-size: 0.8rem; display: none;">
-          <span class="lang-en">Incorrect PIN. Try again.</span>
-          <span class="lang-es">PIN incorrecto. Inténtalo de nuevo.</span>
+      <form id="admin-login-form" style="max-width: 300px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;">
+        <label class="form-label" for="admin-email-input" style="text-align: left;">
+          <span class="lang-en">Email</span><span class="lang-es">Correo</span>
+        </label>
+        <input type="email" id="admin-email-input" class="form-input" autocomplete="username" required autofocus />
+        <label class="form-label" for="admin-password-input" style="text-align: left;">
+          <span class="lang-en">Password</span><span class="lang-es">Contraseña</span>
+        </label>
+        <input type="password" id="admin-password-input" class="form-input" autocomplete="current-password" required />
+        <div id="admin-login-error" role="alert" style="color: #ef4444; font-size: 0.8rem; display: none;">
+          <span class="lang-en">Sign-in failed. Check your credentials and admin access.</span>
+          <span class="lang-es">No se pudo iniciar sesión. Revisa tus credenciales y permisos de administrador.</span>
         </div>
         <button type="submit" class="btn btn--primary" style="width: 100%; height: 44px;">
-          <span class="lang-en">Enter Dashboard</span>
-          <span class="lang-es">Entrar al Panel</span>
+          <span class="lang-en">Sign In</span>
+          <span class="lang-es">Iniciar Sesión</span>
         </button>
       </form>
     </div>
   `;
 
-  const form = document.getElementById('admin-pin-form');
-  const pinInput = document.getElementById('admin-pin-input');
-  const pinError = document.getElementById('pin-error');
-  setTimeout(() => pinInput?.focus(), 80);
+  const form = document.getElementById('admin-login-form');
+  const emailInput = document.getElementById('admin-email-input');
+  const passwordInput = document.getElementById('admin-password-input');
+  const loginError = document.getElementById('admin-login-error');
+  setTimeout(() => emailInput?.focus(), 80);
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const entered = pinInput.value.trim();
-    const correctPin = getAdminPIN();
+    const submitButton = form.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    loginError.style.display = 'none';
 
-    if (entered === correctPin) {
-      sessionStorage.setItem('byjosh_admin_auth', '1');
+    try {
+      await signInAdmin(emailInput.value.trim(), passwordInput.value);
       renderDashboard(container);
-    } else {
-      pinError.style.display = 'block';
-      pinInput.value = '';
-      pinInput.focus();
+    } catch (error) {
+      loginError.style.display = 'block';
+      passwordInput.value = '';
+      passwordInput.focus();
+      console.warn('Admin sign-in rejected:', error.message);
+      submitButton.disabled = false;
     }
   });
 }
@@ -254,8 +262,8 @@ async function renderDashboard(container) {
         </button>
         <button class="admin-tab" data-tab="settings">
           <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-          <span class="lang-en">Settings</span>
-          <span class="lang-es">Configuración</span>
+          <span class="lang-en">Security</span>
+          <span class="lang-es">Seguridad</span>
         </button>
       </div>
 
@@ -270,9 +278,9 @@ async function renderDashboard(container) {
     </div>
   `;
 
-  document.getElementById('admin-logout-btn')?.addEventListener('click', () => {
-    sessionStorage.removeItem('byjosh_admin_auth');
-    renderPinScreen(container);
+  document.getElementById('admin-logout-btn')?.addEventListener('click', async () => {
+    await signOutAdmin();
+    renderAdminLogin(container);
   });
 
   const tabs = container.querySelectorAll('.admin-tab');
@@ -441,7 +449,7 @@ async function loadPricingTab() {
 
       <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px;">
         ${plans.map(p => `
-          <div class="pricing-edit-card" data-id="${p.id}" style="padding: 18px; background: var(--bg-surface); border: 1px solid ${p.popular ? 'var(--accent-primary)' : 'var(--border-color)'}; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
+          <div class="pricing-edit-card" data-id="${escapeHtml(p.id)}" style="padding: 18px; background: var(--bg-surface); border: 1px solid ${p.popular ? 'var(--accent-primary)' : 'var(--border-color)'}; border-radius: var(--radius-md); display: flex; flex-direction: column; gap: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
               <span style="font-family: var(--font-display); font-weight: 700; color: var(--text-primary); font-size: 0.95rem;">
                 <span class="lang-en">${escapeHtml(p.title_en)}</span>
@@ -547,7 +555,7 @@ async function loadProjectsTab() {
               <label class="form-label" style="font-size: 0.75rem;">Categoría / Category *</label>
               <select id="proj-cat-select" class="form-input form-select" required>
                 ${categories.map(c => `
-                  <option value="${c.id}">${c.name_es} (${c.name_en})</option>
+                  <option value="${escapeHtml(c.id)}">${escapeHtml(c.name_es)} (${escapeHtml(c.name_en)})</option>
                 `).join('')}
               </select>
             </div>
@@ -600,7 +608,7 @@ async function loadProjectsTab() {
                     </div>
                   </div>
                 </div>
-                <button class="btn btn--outline btn-delete-proj" data-id="${p.id}" data-img="${escapeHtml(p.img)}" style="padding: 4px 10px; font-size: 0.72rem; color: #f87171; border-color: rgba(248, 113, 113, 0.25);">
+                <button class="btn btn--outline btn-delete-proj" data-id="${escapeHtml(p.id)}" data-img="${escapeHtml(p.img)}" style="padding: 4px 10px; font-size: 0.72rem; color: #f87171; border-color: rgba(248, 113, 113, 0.25);">
                   <span class="lang-en">Delete</span>
                   <span class="lang-es">Eliminar</span>
                 </button>
@@ -755,7 +763,7 @@ async function loadCategoriesTab() {
                 </div>
                 <div style="font-size: 0.72rem; color: var(--text-muted);">${escapeHtml(c.name_en)} &bull; <code>${escapeHtml(c.id)}</code></div>
               </div>
-              <button class="btn btn--outline btn-del-cat" data-id="${c.id}" style="padding: 3px 8px; font-size: 0.68rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2);" title="Eliminar categoría">
+              <button class="btn btn--outline btn-del-cat" data-id="${escapeHtml(c.id)}" style="padding: 3px 8px; font-size: 0.68rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2);" title="Eliminar categoría">
                 &times;
               </button>
             </div>
@@ -831,7 +839,7 @@ async function loadReviewsTab() {
             <div>
               <label class="form-label" style="font-size: 0.72rem;">Servicio / Service</label>
               <select id="man-service" class="form-input form-select">
-                ${cats.map(c => `<option value="${c.name_en}">${c.name_es} (${c.name_en})</option>`).join('')}
+                ${cats.map(c => `<option value="${escapeHtml(c.name_en)}">${escapeHtml(c.name_es)} (${escapeHtml(c.name_en)})</option>`).join('')}
                 <option value="Custom Design">Custom Design</option>
               </select>
             </div>
@@ -870,7 +878,7 @@ async function loadReviewsTab() {
                     <span style="font-weight: 700; color: var(--text-primary); font-size: 0.9rem;">${escapeHtml(r.name)}</span>
                     ${r.handle ? `<span style="font-size: 0.75rem; color: var(--accent-primary);">${escapeHtml(r.handle)}</span>` : ''}
                     <span class="badge ${r.status === 'approved' ? 'badge--primary' : r.status === 'hidden' ? 'badge--secondary' : 'badge--accent'}" style="font-size: 0.65rem; padding: 1px 6px;">
-                      ${r.status}
+                      ${escapeHtml(r.status)}
                     </span>
                   </div>
                   <span style="font-size: 0.75rem; color: var(--text-muted);">${escapeHtml(r.service)}</span>
@@ -890,17 +898,17 @@ async function loadReviewsTab() {
                 </span>
                 <div style="display: flex; gap: 6px;">
                   ${r.status !== 'approved' ? `
-                    <button class="btn btn--primary btn-approve-review" data-id="${r.id}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
+                    <button class="btn btn--primary btn-approve-review" data-id="${escapeHtml(r.id)}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
                       <span class="lang-en">Approve</span>
                       <span class="lang-es">Aprobar</span>
                     </button>
                   ` : `
-                    <button class="btn btn--outline btn-hide-review" data-id="${r.id}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
+                    <button class="btn btn--outline btn-hide-review" data-id="${escapeHtml(r.id)}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
                       <span class="lang-en">Hide</span>
                       <span class="lang-es">Ocultar</span>
                     </button>
                   `}
-                  <button class="btn btn--outline btn-delete-review" data-id="${r.id}" style="padding: 4px 10px; font-size: 0.7rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2); border-radius: var(--radius-full);">
+                  <button class="btn btn--outline btn-delete-review" data-id="${escapeHtml(r.id)}" style="padding: 4px 10px; font-size: 0.7rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2); border-radius: var(--radius-full);">
                     <span class="lang-en">Delete</span>
                     <span class="lang-es">Eliminar</span>
                   </button>
@@ -928,8 +936,7 @@ async function loadReviewsTab() {
     const rating = document.getElementById('man-rating').value;
     const comment = document.getElementById('man-comment').value;
 
-    await submitReview({
-      token: 'admin-manual-' + Date.now(),
+    await addAdminReview({
       name,
       handle,
       service,
@@ -1002,7 +1009,7 @@ async function loadTokensTab() {
           <div style="display: flex; flex-direction: column; gap: 2px;">
             <div style="display: flex; align-items: center; gap: 8px;">
               <span style="font-family: monospace; font-size: 0.85rem; color: var(--text-primary); font-weight: 600;">${escapeHtml(t.token)}</span>
-              <button class="btn btn--outline btn-copy-row-link" data-token="${t.token}" style="padding: 2px 8px; font-size: 0.65rem; border-radius: var(--radius-full);" title="Copiar enlace">
+              <button class="btn btn--outline btn-copy-row-link" data-token="${escapeHtml(t.token)}" style="padding: 2px 8px; font-size: 0.65rem; border-radius: var(--radius-full);" title="Copiar enlace">
                 <span class="lang-en">Copy</span><span class="lang-es">Copiar</span>
               </button>
             </div>
@@ -1011,13 +1018,13 @@ async function loadTokensTab() {
             </span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
-            <button class="btn btn--outline btn-toggle-token" data-token="${t.token}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
+            <button class="btn btn--outline btn-toggle-token" data-token="${escapeHtml(t.token)}" style="padding: 4px 10px; font-size: 0.7rem; border-radius: var(--radius-full);">
               <span class="badge ${t.used ? 'badge--secondary' : 'badge--primary'}" style="font-size: 0.65rem; padding: 1px 6px;">
                 <span class="lang-en">${t.used ? 'Used' : 'Pending'}</span>
                 <span class="lang-es">${t.used ? 'Utilizado' : 'Pendiente'}</span>
               </span>
             </button>
-            <button class="btn btn--outline btn-delete-token" data-token="${t.token}" style="padding: 4px 8px; font-size: 0.7rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2); border-radius: var(--radius-full);" title="Eliminar enlace">
+            <button class="btn btn--outline btn-delete-token" data-token="${escapeHtml(t.token)}" style="padding: 4px 8px; font-size: 0.7rem; color: #f87171; border-color: rgba(248, 113, 113, 0.2); border-radius: var(--radius-full);" title="Eliminar enlace">
               &times;
             </button>
           </div>
@@ -1054,87 +1061,23 @@ async function loadTokensTab() {
   });
 }
 
-// ── TAB 7: SETTINGS ───────────────────────────────────────────────────────────
+// ── TAB 7: SECURITY ───────────────────────────────────────────────────────────
 function renderSettingsTab() {
   const el = document.getElementById('tab-content-settings');
   if (!el) return;
 
-  const sbConfig = getSupabaseConfig();
-  const currentSbUrl = localStorage.getItem('byjosh_sb_url') || sbConfig.url;
-  const currentSbKey = localStorage.getItem('byjosh_sb_key') || sbConfig.key;
-
   el.innerHTML = `
-    <div style="padding: 6px 0; display: flex; flex-direction: column; gap: 24px;">
-      <div>
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-          <h4 style="margin: 0; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
-            <span class="lang-en">Supabase Cloud Database & Storage</span>
-            <span class="lang-es">Base de Datos y Almacenamiento Supabase</span>
-          </h4>
-          <div style="display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; background: rgba(0, 242, 254, 0.08); border: 1px solid rgba(0, 242, 254, 0.25); border-radius: var(--radius-full); font-size: 0.72rem; color: var(--accent-primary);">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-            <span class="lang-en">Cloud Connected</span>
-            <span class="lang-es">Nube Conectada</span>
-          </div>
-        </div>
-        <p style="margin: 0 0 14px; font-size: 0.82rem; color: var(--text-muted); line-height: 1.5;">
-          <span class="lang-en">Connected to your Supabase project. Prices, projects, images, reviews, and tokens synchronize globally.</span>
-          <span class="lang-es">Conectado a tu proyecto de Supabase. Precios, imágenes, proyectos, reseñas y tokens se sincronizan globalmente.</span>
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <div>
-            <label class="form-label" style="font-size: 0.75rem;">Project URL</label>
-            <input type="text" id="sb-url-input" class="form-input" placeholder="https://xyzcompany.supabase.co" value="${escapeHtml(currentSbUrl)}" />
-          </div>
-          <div>
-            <label class="form-label" style="font-size: 0.75rem;">Anon / Publishable Key</label>
-            <input type="password" id="sb-key-input" class="form-input" placeholder="sb_publishable_... o eyJhbGciOiJIUzI1NiIsIn..." value="${escapeHtml(currentSbKey)}" />
-          </div>
-          <button id="btn-save-sb" class="btn btn--primary" style="align-self: flex-start; padding: 10px 22px; font-size: 0.82rem;">
-            <span class="lang-en">Save Connection</span>
-            <span class="lang-es">Guardar Conexión</span>
-          </button>
-        </div>
-      </div>
-
-      <div style="border-top: 1px solid var(--border-color); padding-top: 18px;">
-        <h4 style="margin: 0 0 6px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
-          <span class="lang-en">Change Admin PIN</span>
-          <span class="lang-es">Cambiar PIN de Acceso</span>
-        </h4>
-        <div style="display: flex; gap: 10px; align-items: flex-end; margin-top: 10px;">
-          <div style="flex: 1;">
-            <label class="form-label" style="font-size: 0.75rem;">
-              <span class="lang-en">New PIN</span>
-              <span class="lang-es">Nuevo PIN</span>
-            </label>
-            <input type="password" id="new-pin-input" class="form-input" placeholder="e.g. 1234" maxlength="30" />
-          </div>
-          <button id="btn-save-pin" class="btn btn--outline" style="padding: 10px 20px; font-size: 0.82rem;">
-            <span class="lang-en">Update PIN</span>
-            <span class="lang-es">Actualizar PIN</span>
-          </button>
-        </div>
-      </div>
+    <div style="padding: 6px 0; max-width: 620px;">
+      <h4 style="margin: 0 0 8px; color: var(--text-primary); font-size: 0.95rem; font-family: var(--font-display); font-weight: 700;">
+        <span class="lang-en">Admin access is managed by Supabase Auth and database policies.</span>
+        <span class="lang-es">El acceso administrativo se controla con Supabase Auth y políticas de base de datos.</span>
+      </h4>
+      <p style="margin: 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;">
+        <span class="lang-en">Only user IDs listed in <code>public.admin_users</code> can change portfolio content. Create or disable admin accounts in Supabase Auth, then manage their authorization in the SQL editor. Project connection settings belong in the deployment environment, never in this browser.</span>
+        <span class="lang-es">Solo los IDs registrados en <code>public.admin_users</code> pueden cambiar el contenido. Crea o desactiva cuentas en Supabase Auth y administra sus permisos desde SQL Editor. La conexión del proyecto se configura en el entorno de despliegue, nunca en este navegador.</span>
+      </p>
     </div>
   `;
-
-  document.getElementById('btn-save-sb')?.addEventListener('click', () => {
-    const url = document.getElementById('sb-url-input').value;
-    const key = document.getElementById('sb-key-input').value;
-    saveSupabaseConfig(url, key);
-    const isEs = document.body.classList.contains('lang-es');
-    alert(isEs ? 'Credenciales de Supabase guardadas con éxito.' : 'Supabase credentials saved successfully.');
-  });
-
-  document.getElementById('btn-save-pin')?.addEventListener('click', () => {
-    const pin = document.getElementById('new-pin-input').value;
-    const isEs = document.body.classList.contains('lang-es');
-    if (!pin) return alert(isEs ? 'Por favor ingresa un PIN válido.' : 'Please enter a valid PIN.');
-    setAdminPIN(pin);
-    alert(isEs ? 'PIN de administrador actualizado con éxito.' : 'Admin PIN updated successfully.');
-    document.getElementById('new-pin-input').value = '';
-  });
 }
 
 function renderStarIcons(count) {

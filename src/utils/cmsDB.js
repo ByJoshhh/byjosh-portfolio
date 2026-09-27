@@ -7,7 +7,7 @@
  * 3. Dynamic Portfolio Projects (CMS Gallery)
  * 4. Dynamic Categories & Filters
  */
-import { getSupabaseConfig } from './reviewsDB.js';
+import { getSupabaseConfig, getSupabaseHeaders } from './supabaseClient.js';
 
 const safeStorage = {
   getItem: (k) => (typeof localStorage !== 'undefined' ? localStorage.getItem(k) : null),
@@ -78,10 +78,7 @@ export async function getPricingPlans() {
   if (sb.isConfigured) {
     try {
       const res = await fetch(`${sb.url}/rest/v1/pricing_plans?order=order_index.asc`, {
-        headers: {
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
-        }
+        headers: await getSupabaseHeaders()
       });
       if (res.ok) {
         const rows = await res.json();
@@ -108,23 +105,18 @@ export async function updatePricingPlan(id, updates) {
     try {
       const res = await fetch(`${sb.url}/rest/v1/pricing_plans?id=eq.${encodeURIComponent(id)}`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
-        },
+        headers: await getSupabaseHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify({
           ...updates,
           updated_at: new Date().toISOString()
         })
       });
-      if (res.ok) {
-        // Invalidate local cache
-        safeStorage.removeItem('byjosh_pricing_cache');
-        return true;
-      }
+      if (!res.ok) throw new Error(`Supabase update plan failed (${res.status})`);
+      safeStorage.removeItem('byjosh_pricing_cache');
+      return true;
     } catch (err) {
-      console.warn('Supabase updatePricingPlan failed:', err);
+      console.error('Supabase updatePricingPlan failed:', err);
+      throw err;
     }
   }
 
@@ -147,10 +139,7 @@ export async function getCategories() {
   if (sb.isConfigured) {
     try {
       const res = await fetch(`${sb.url}/rest/v1/categories?order=order_index.asc`, {
-        headers: {
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
-        }
+        headers: await getSupabaseHeaders()
       });
       if (res.ok) {
         const rows = await res.json();
@@ -186,20 +175,18 @@ export async function addCategory({ id, name_en, name_es, badge }) {
     try {
       const res = await fetch(`${sb.url}/rest/v1/categories`, {
         method: 'POST',
-        headers: {
+        headers: await getSupabaseHeaders({
           'Content-Type': 'application/json',
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`,
           'Prefer': 'return=representation'
-        },
+        }),
         body: JSON.stringify(newCat)
       });
-      if (res.ok) {
-        safeStorage.removeItem('byjosh_categories_cache');
-        return { success: true, category: newCat };
-      }
+      if (!res.ok) throw new Error(`Supabase add category failed (${res.status})`);
+      safeStorage.removeItem('byjosh_categories_cache');
+      return { success: true, category: newCat };
     } catch (err) {
-      console.warn('Supabase addCategory failed:', err);
+      console.error('Supabase addCategory failed:', err);
+      throw err;
     }
   }
 
@@ -213,16 +200,17 @@ export async function deleteCategory(id) {
   const sb = getSupabaseConfig();
   if (sb.isConfigured) {
     try {
-      await fetch(`${sb.url}/rest/v1/categories?id=eq.${encodeURIComponent(id)}`, {
+      const res = await fetch(`${sb.url}/rest/v1/categories?id=eq.${encodeURIComponent(id)}`, {
         method: 'DELETE',
-        headers: {
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
-        }
+        headers: await getSupabaseHeaders()
       });
+      if (!res.ok) throw new Error(`Supabase delete category failed (${res.status})`);
       safeStorage.removeItem('byjosh_categories_cache');
       return true;
-    } catch (err) {}
+    } catch (err) {
+      console.error('Supabase deleteCategory failed:', err);
+      throw err;
+    }
   }
 
   const cats = (await getCategories()).filter(c => c.id !== id);
@@ -247,11 +235,7 @@ export async function uploadProjectImage(file) {
 
   const res = await fetch(uploadUrl, {
     method: 'POST',
-    headers: {
-      'apikey': sb.key,
-      'Authorization': `Bearer ${sb.key}`,
-      'Content-Type': file.type || 'application/octet-stream'
-    },
+    headers: await getSupabaseHeaders({ 'Content-Type': file.type || 'application/octet-stream' }),
     body: file
   });
 
@@ -272,10 +256,7 @@ export async function getDynamicProjects() {
   if (sb.isConfigured) {
     try {
       const res = await fetch(`${sb.url}/rest/v1/projects?order=created_at.desc`, {
-        headers: {
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
-        }
+        headers: await getSupabaseHeaders()
       });
       if (res.ok) {
         const rows = await res.json();
@@ -307,23 +288,20 @@ export async function addDynamicProject({ title, cat, img, bg, is_new }) {
     try {
       const res = await fetch(`${sb.url}/rest/v1/projects`, {
         method: 'POST',
-        headers: {
+        headers: await getSupabaseHeaders({
           'Content-Type': 'application/json',
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`,
           'Prefer': 'return=representation'
-        },
+        }),
         body: JSON.stringify(projectObj)
       });
-      if (res.ok) {
-        const data = await res.json();
-        const created = data?.[0] || projectObj;
-        // Invalidate cache
-        safeStorage.removeItem('byjosh_dynamic_projects');
-        return { success: true, project: created };
-      }
+      if (!res.ok) throw new Error(`Supabase add project failed (${res.status})`);
+      const data = await res.json();
+      const created = data?.[0] || projectObj;
+      safeStorage.removeItem('byjosh_dynamic_projects');
+      return { success: true, project: created };
     } catch (err) {
-      console.warn('Supabase addDynamicProject failed:', err);
+      console.error('Supabase addDynamicProject failed:', err);
+      throw err;
     }
   }
 
@@ -344,31 +322,28 @@ export async function deleteDynamicProject(id, imgUrl) {
   if (sb.isConfigured) {
     try {
       // 1. Delete row from table
-      await fetch(`${sb.url}/rest/v1/projects?id=eq.${encodeURIComponent(id)}`, {
+      const deleteRowRes = await fetch(`${sb.url}/rest/v1/projects?id=eq.${encodeURIComponent(id)}`, {
         method: 'DELETE',
-        headers: {
-          'apikey': sb.key,
-          'Authorization': `Bearer ${sb.key}`
-        }
+        headers: await getSupabaseHeaders()
       });
+      if (!deleteRowRes.ok) throw new Error(`Supabase delete project failed (${deleteRowRes.status})`);
 
       // 2. If image is in Supabase storage, delete it as well
       if (imgUrl && imgUrl.includes('/storage/v1/object/public/portfolio/')) {
         const filePath = imgUrl.split('/storage/v1/object/public/portfolio/')[1];
         if (filePath) {
-          await fetch(`${sb.url}/storage/v1/object/portfolio/${filePath}`, {
+          const deleteImageRes = await fetch(`${sb.url}/storage/v1/object/portfolio/${filePath}`, {
             method: 'DELETE',
-            headers: {
-              'apikey': sb.key,
-              'Authorization': `Bearer ${sb.key}`
-            }
+            headers: await getSupabaseHeaders()
           });
+          if (!deleteImageRes.ok) throw new Error(`Supabase image delete failed (${deleteImageRes.status})`);
         }
       }
       safeStorage.removeItem('byjosh_dynamic_projects');
       return true;
     } catch (err) {
-      console.warn('Supabase delete project failed:', err);
+      console.error('Supabase delete project failed:', err);
+      throw err;
     }
   }
 

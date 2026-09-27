@@ -103,6 +103,35 @@ const STATIC_DATA = [
     { title: 'Calex', cat: 'anime-backgrounds', img: '/images/Anime-Backgrounds/CALEXBG.webp', bg: 'linear-gradient(135deg, #4fc3f7, #1a1e3a)' }
   ];
 
+const DEFAULT_PROJECT_BACKGROUND = 'linear-gradient(135deg, #1a1e3a, #0b0d14)';
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function safeProjectImageUrl(value) {
+  const imageUrl = String(value ?? '').trim();
+  if (imageUrl.startsWith('/') && !imageUrl.startsWith('//')) return imageUrl;
+
+  try {
+    const parsed = new URL(imageUrl);
+    return parsed.protocol === 'https:' ? parsed.href : '';
+  } catch {
+    return '';
+  }
+}
+
+function safeProjectBackground(value) {
+  const background = String(value ?? '');
+  const safeGradient = /^linear-gradient\(\s*\d{1,3}deg\s*,\s*#[\da-f]{3,8}\s*,\s*#[\da-f]{3,8}\s*\)$/i;
+  return safeGradient.test(background) ? background : DEFAULT_PROJECT_BACKGROUND;
+}
+
 export async function initProjects() {
   const section = document.getElementById('projects');
   if (!section) return;
@@ -125,9 +154,9 @@ export async function initProjects() {
 
 export function renderProjectsGallery(section, data, categories) {
   const getCategoryLabel = (cat) => {
-    const matched = (categories || []).find(c => cat.includes(c.id));
+    const matched = (categories || []).find(c => cat.includes(String(c.id || '')));
     if (matched) {
-      return `<span class="lang-en">${matched.name_en}</span><span class="lang-es">${matched.name_es}</span>`;
+      return `<span class="lang-en">${escapeHtml(matched.name_en)}</span><span class="lang-es">${escapeHtml(matched.name_es)}</span>`;
     }
     if (cat.includes('thumbnails')) return '<span class="lang-en">Thumbnail Design</span><span class="lang-es">Diseño de Miniaturas</span>';
     if (cat.includes('headers')) return '<span class="lang-en">Header Design</span><span class="lang-es">Diseño de Header</span>';
@@ -149,9 +178,9 @@ export function renderProjectsGallery(section, data, categories) {
         <button class="filter-btn filter-btn--active" data-filter="featured"><span class="lang-en">Featured</span><span class="lang-es">Destacados</span></button>
         <button class="filter-btn" data-filter="all"><span class="lang-en">All</span><span class="lang-es">Todos</span></button>
         ${(categories || []).map(c => `
-          <button class="filter-btn" data-filter="${c.id}">
-            <span class="lang-en">${c.name_en}</span><span class="lang-es">${c.name_es}</span>
-            ${c.badge ? `<span class="filter-badge">${c.badge}</span>` : ''}
+          <button class="filter-btn" data-filter="${escapeHtml(c.id)}">
+            <span class="lang-en">${escapeHtml(c.name_en)}</span><span class="lang-es">${escapeHtml(c.name_es)}</span>
+            ${c.badge ? `<span class="filter-badge">${escapeHtml(c.badge)}</span>` : ''}
           </button>
         `).join('')}
       </div>
@@ -159,24 +188,27 @@ export function renderProjectsGallery(section, data, categories) {
         ${data
           .map(
             (p) => {
+            const projectCategories = String(p.cat || '');
+            const projectTitle = escapeHtml(p.title);
+            const imageUrl = safeProjectImageUrl(p.img);
             // Featured images load immediately; others use data-src so
             // the browser doesn't download them until the user opens that tab.
-            const isFeatured = p.cat.includes('featured');
-            const imgAttr = isFeatured
-              ? `src="${p.img}"`
-              : `data-src="${p.img}"`;
+            const isFeatured = projectCategories.split(',').includes('featured');
+            const imgAttr = imageUrl
+              ? (isFeatured ? `src="${escapeHtml(imageUrl)}"` : `data-src="${escapeHtml(imageUrl)}"`)
+              : '';
             return `
-          <div class="project-card card-spawn" data-categories="${p.cat}">
+          <div class="project-card card-spawn" data-categories="${escapeHtml(projectCategories)}">
             ${p.isNew ? '<div class="project-card__badge">NEW</div>' : ''}
-            <div class="project-card__image" style="background:${p.bg}">
+            <div class="project-card__image" style="background:${safeProjectBackground(p.bg)}">
               <div class="skeleton-loader"></div>
-              <img ${imgAttr} alt="${p.title}" loading="lazy" decoding="async"
+              <img ${imgAttr} alt="${projectTitle}" loading="lazy" decoding="async"
                    onload="this.classList.add('loaded'); const skel = this.previousElementSibling; if(skel && skel.classList.contains('skeleton-loader')) skel.remove();"
                    onerror="this.closest('.project-card').style.display='none'">
             </div>
             <div class="project-card__overlay">
-              <h3 class="project-card__title">${p.title}</h3>
-              <p class="project-card__category">${getCategoryLabel(p.cat)}</p>
+              <h3 class="project-card__title">${projectTitle}</h3>
+              <p class="project-card__category">${getCategoryLabel(projectCategories)}</p>
               <span class="project-card__link"><span class="lang-en">View Full Size</span><span class="lang-es">Ver en Grande</span> →</span>
             </div>
           </div>`;
