@@ -10,9 +10,18 @@
 import { getSupabaseConfig, getSupabaseHeaders } from './supabaseClient.js';
 
 const safeStorage = {
-  getItem: (k) => (typeof localStorage !== 'undefined' ? localStorage.getItem(k) : null),
-  setItem: (k, v) => { if (typeof localStorage !== 'undefined') localStorage.setItem(k, v); },
-  removeItem: (k) => { if (typeof localStorage !== 'undefined') localStorage.removeItem(k); }
+  getItem: (k) => {
+    try { return typeof localStorage !== 'undefined' ? localStorage.getItem(k) : null; }
+    catch { return null; }
+  },
+  setItem: (k, v) => {
+    try { if (typeof localStorage !== 'undefined') localStorage.setItem(k, v); }
+    catch { /* Keep the CMS usable when browser storage is unavailable. */ }
+  },
+  removeItem: (k) => {
+    try { if (typeof localStorage !== 'undefined') localStorage.removeItem(k); }
+    catch { /* Cache cleanup must not break a successful CMS update. */ }
+  }
 };
 
 // Default static fallbacks
@@ -73,6 +82,19 @@ export const DEFAULT_CATEGORIES = [
 // ==============================================================================
 // 1. PRICING PLANS
 // ==============================================================================
+export function getCachedPricingPlans() {
+  const cached = safeStorage.getItem('byjosh_pricing_cache');
+  if (cached) {
+    try {
+      const plans = JSON.parse(cached);
+      if (Array.isArray(plans) && plans.length > 0) return plans;
+    } catch (err) {
+      console.warn('Invalid cached pricing data; using defaults:', err);
+    }
+  }
+  return DEFAULT_PRICING_PLANS;
+}
+
 export async function getPricingPlans() {
   const sb = getSupabaseConfig();
   if (sb.isConfigured) {
@@ -92,11 +114,7 @@ export async function getPricingPlans() {
     }
   }
 
-  const cached = safeStorage.getItem('byjosh_pricing_cache');
-  if (cached) {
-    try { return JSON.parse(cached); } catch (e) {}
-  }
-  return DEFAULT_PRICING_PLANS;
+  return getCachedPricingPlans();
 }
 
 export async function updatePricingPlan(id, updates) {
