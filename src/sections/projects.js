@@ -5,6 +5,7 @@ import { scrollObserver } from '../utils/animations.js';
 import { getDynamicProjects, getCategories } from '../utils/cmsDB.js';
 
 const STATIC_DATA = [
+    { title: 'Sunix TOP 2', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Thumbnail-TOP2.webp', bg: 'linear-gradient(135deg, #6b0a0a, #0a0a0a)', isNew: true },
     { title: 'The Golden - Viipr', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-Viipr.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
     { title: 'Still Home - G2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Still-Home-G2-clean.webp?v=2', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'BDD vs Chovy', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/BPD-vs-Chovy.webp', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
