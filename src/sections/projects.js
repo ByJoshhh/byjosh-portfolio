@@ -276,9 +276,16 @@ export function renderProjectsGallery(section, data, categories) {
       });
     });
 
-    closeLb.addEventListener('click', () => lightbox.classList.remove('active'));
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+      setTimeout(() => {
+        lbImg.src = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+      }, 300);
+    };
+
+    closeLb.addEventListener('click', closeLightbox);
     lightbox.addEventListener('click', (e) => {
-      if(e.target === lightbox) lightbox.classList.remove('active');
+      if(e.target === lightbox) closeLightbox();
     });
   }
 
