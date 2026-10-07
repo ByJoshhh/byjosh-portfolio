@@ -39,9 +39,9 @@ export function initAbout() {
         </div>
       </div>
       <div class="about__visuals fade-up" style="animation-delay: 0.3s">
-        <img src="/images/senpai-mio.gif" alt="Anime aesthetic 1" class="about__gif about__gif--1" loading="lazy" decoding="async">
-        <img src="/images/haimiya-anime.gif" alt="Anime aesthetic 2" class="about__gif about__gif--2" loading="lazy" decoding="async">
-        <img src="/images/superbad-whats-up.gif" alt="McLovin Superbad" class="about__gif about__gif--3" loading="lazy" decoding="async">
+        <img src="/images/senpai-mio.anim.webp" alt="Anime aesthetic 1" class="about__gif about__gif--1" width="360" height="357" loading="lazy" decoding="async">
+        <img src="/images/haimiya-anime.anim.webp" alt="Anime aesthetic 2" class="about__gif about__gif--2" width="498" height="498" loading="lazy" decoding="async">
+        <img src="/images/superbad-whats-up.anim.webp" alt="McLovin Superbad" class="about__gif about__gif--3" width="498" height="280" loading="lazy" decoding="async">
       </div>
     </div>
   `;

@@ -191,21 +191,23 @@ export function renderProjectsGallery(section, data, categories) {
             (p) => {
             const projectCategories = String(p.cat || '');
             const projectTitle = escapeHtml(p.title);
-            const imageUrl = safeProjectImageUrl(p.img);
-            // Featured images load immediately; others use data-src so
-            // the browser doesn't download them until the user opens that tab.
+            const fullUrl = safeProjectImageUrl(p.img);
+            // Use 720px optimized thumb for the grid card; lightbox retains original image
+            const thumbUrl = fullUrl.startsWith('/images/') && !fullUrl.startsWith('/images/thumbs/')
+              ? fullUrl.replace('/images/', '/images/thumbs/')
+              : fullUrl;
             const isFeatured = projectCategories.split(',').includes('featured');
-            const imgAttr = imageUrl
-              ? (isFeatured ? `src="${escapeHtml(imageUrl)}"` : `data-src="${escapeHtml(imageUrl)}"`)
+            const imgAttr = thumbUrl
+              ? (isFeatured ? `src="${escapeHtml(thumbUrl)}"` : `data-src="${escapeHtml(thumbUrl)}"`)
               : '';
             return `
-          <div class="project-card card-spawn" data-categories="${escapeHtml(projectCategories)}">
+          <div class="project-card card-spawn" data-categories="${escapeHtml(projectCategories)}" data-full-image="${escapeHtml(fullUrl)}">
             ${p.isNew ? '<div class="project-card__badge">NEW</div>' : ''}
             <div class="project-card__image" style="background:${safeProjectBackground(p.bg)}">
               <div class="skeleton-loader"></div>
-              <img ${imgAttr} alt="${projectTitle}" loading="lazy" decoding="async"
+              <img ${imgAttr} data-full="${escapeHtml(fullUrl)}" alt="${projectTitle}" width="720" height="405" loading="lazy" decoding="async"
                    onload="this.classList.add('loaded'); const skel = this.previousElementSibling; if(skel && skel.classList.contains('skeleton-loader')) skel.remove();"
-                   onerror="this.closest('.project-card').style.display='none'">
+                   onerror="if(this.src !== this.dataset.full){ this.src = this.dataset.full; } else { this.closest('.project-card').style.display='none'; }">
             </div>
             <div class="project-card__overlay">
               <h3 class="project-card__title">${projectTitle}</h3>
@@ -268,7 +270,8 @@ export function renderProjectsGallery(section, data, categories) {
       card.addEventListener('click', () => {
         const img = card.querySelector('img');
         loadImg(img);
-        lbImg.src = img.src;
+        const fullSrc = card.dataset.fullImage || img?.dataset.full || img?.src;
+        if (fullSrc) lbImg.src = fullSrc;
         lightbox.classList.add('active');
       });
     });

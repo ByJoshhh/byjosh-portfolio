@@ -58,7 +58,7 @@ export function initFaq() {
       <div class="faq__list stagger-children fade-up" style="margin-top: 40px;">
         ${faqs.map((faq, index) => `
           <div class="faq__item" style="border-bottom: 1px solid var(--border-color); padding: 24px 0;">
-            <button class="faq__question" aria-expanded="false" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; padding: 0; cursor: pointer; color: var(--text-primary); font-family: var(--font-display); font-size: 1.2rem; font-weight: 600; text-align: left;">
+            <button class="faq__question" aria-expanded="false" style="width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: none; padding: 10px 0; min-height: 48px; cursor: pointer; color: var(--text-primary); font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; text-align: left;">
               <span><span class="lang-en">${faq.q.en}</span><span class="lang-es">${faq.q.es}</span></span>
               <svg class="faq__icon" viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" style="transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px;"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>

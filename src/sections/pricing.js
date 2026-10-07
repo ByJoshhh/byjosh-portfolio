@@ -1,8 +1,7 @@
 /**
  * Pricing section — dynamic honest pricing cards connected to Supabase CMS.
  */
-import { getCachedPricingPlans, getPricingPlans } from '../utils/cmsDB.js';
-import { observeAnimations } from '../utils/animations.js';
+import { getPricingPlans } from '../utils/cmsDB.js';
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -17,28 +16,14 @@ export async function initPricing() {
   const section = document.getElementById('pricing');
   if (!section) return;
 
-  // Render cached/default data immediately so a slow Supabase request cannot
-  // leave this section empty while the rest of the page is already visible.
-  renderPricing(section, getCachedPricingPlans());
-  observeAnimations(section);
-
-  const refreshPricing = async () => {
-    try {
-      const plans = await getPricingPlans();
-      renderPricing(section, plans);
-      // The initial page animation scan may have run before Supabase resolved.
-      observeAnimations(section);
-    } catch (err) {
-      // Keep cached/default prices visible if the remote refresh fails.
-      console.warn('Could not refresh pricing plans:', err);
-    }
-  };
-
-  // Refresh with the current CMS values in the background.
-  void refreshPricing();
+  const plans = await getPricingPlans();
+  renderPricing(section, plans);
 
   // Listen for live pricing updates from admin modal
-  window.addEventListener('byjosh:pricing_updated', refreshPricing);
+  window.addEventListener('byjosh:pricing_updated', async () => {
+    const updatedPlans = await getPricingPlans();
+    renderPricing(section, updatedPlans);
+  });
 }
 
 export function renderPricing(section, plans) {

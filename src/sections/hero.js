@@ -37,7 +37,7 @@ export function initHero() {
         </div>
       </div>
       <div class="hero__visuals fade-in" style="animation-delay: 0.7s">
-        <img src="/images/haimiya.gif" alt="Haimiya Anime Character" class="hero__character">
+        <img src="/images/haimiya.anim.webp" alt="Haimiya Anime Character" class="hero__character" width="704" height="940" fetchpriority="high" decoding="async">
       </div>
     </div>
     <div class="hero__scroll-indicator">

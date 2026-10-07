@@ -21,8 +21,6 @@ import { initContact } from './sections/contact.js';
 import { initAnimations, initSmoothScroll } from './utils/animations.js';
 import { animateCounters } from './utils/counter.js';
 import { initMusicPlayer } from './components/musicPlayer.js';
-import { initReviewModal } from './components/reviewModal.js';
-import { initAdminModal } from './components/adminModal.js';
 
 // --- Preloader Logic ---
 function initPreloader() {
@@ -86,9 +84,45 @@ document.addEventListener('DOMContentLoaded', () => {
   initFaq();
   initContact();
 
-  // 3 — Modals & URL Listeners
-  initReviewModal();
-  initAdminModal();
+  // 3 — Modals & URL Listeners (loaded on demand to keep initial load lightweight)
+  const search = window.location.search;
+  const hash = window.location.hash;
+
+  if (search.includes('review') || hash.includes('review')) {
+    import('./components/reviewModal.js').then((m) => m.initReviewModal());
+  }
+
+  if (search.includes('admin') || hash.includes('admin')) {
+    import('./components/adminModal.js').then((m) => m.initAdminModal());
+  } else {
+    let adminLoading = false;
+    const loadAdmin = () => {
+      if (adminLoading) return;
+      adminLoading = true;
+      import('./components/adminModal.js').then((m) => {
+        m.initAdminModal();
+        m.openAdminModal();
+      }).catch((e) => {
+        adminLoading = false;
+        console.error('Failed to load admin modal:', e);
+      });
+    };
+    document.getElementById('footer-admin-trigger')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      loadAdmin();
+    });
+    window.addEventListener('keydown', (e) => {
+      if ((e.altKey && (e.key === 'a' || e.key === 'A')) || (e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a'))) {
+        e.preventDefault();
+        loadAdmin();
+      }
+    });
+    window.addEventListener('popstate', () => {
+      if (window.location.search.includes('admin') || window.location.hash.includes('admin')) {
+        loadAdmin();
+      }
+    });
+  }
 
   // 4 — Utilities
   initSmoothScroll();

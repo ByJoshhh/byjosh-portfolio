@@ -41,7 +41,7 @@ export function initContact() {
             <span class="lang-en" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">Payment Method:</span>
             <span class="lang-es" style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;">Método de Pago:</span>
             <div style="background: var(--bg-surface); border: 1px solid var(--border-color); padding: 8px 16px; border-radius: var(--radius-sm); display: flex; align-items: center; gap: 10px;">
-              <img src="/images/paypal.png" alt="PayPal" style="height: 22px; width: auto; object-fit: contain;">
+              <img src="/images/paypal.webp" alt="PayPal" width="70" height="22" style="height: 22px; width: auto; object-fit: contain;">
               <span style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; padding: 4px 8px; border-radius: 4px; font-size: 0.65rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">
                 <span class="lang-en">Only</span><span class="lang-es">Exclusivo</span>
               </span>
@@ -67,8 +67,8 @@ export function initContact() {
             </a>
           </div>
           <div class="contact__character fade-up" style="margin-top: 48px; animation-delay: 0.35s; display: flex; justify-content: center; align-items: center; gap: 16px; flex-wrap: wrap;">
-            <img src="/images/haimiya-senpai-haimiya.gif" alt="Haimiya Anime Character" loading="lazy" decoding="async" style="max-width: 210px; width: 100%; border-radius: var(--radius-lg); animation: floatGif 4s ease-in-out infinite; box-shadow: var(--shadow-lg);">
-            <img src="/images/remielle.gif" alt="Remielle Anime Character" loading="lazy" decoding="async" style="max-width: 180px; width: 100%; border-radius: var(--radius-lg); animation: floatGif 5s ease-in-out infinite 0.6s; box-shadow: var(--shadow-lg);">
+            <img src="/images/haimiya-senpai-haimiya.anim.webp" alt="Haimiya Anime Character" width="498" height="282" loading="lazy" decoding="async" style="max-width: 210px; width: 100%; height: auto; border-radius: var(--radius-lg); animation: floatGif 4s ease-in-out infinite; box-shadow: var(--shadow-lg);">
+            <img src="/images/remielle.anim.webp" alt="Remielle Anime Character" width="374" height="374" loading="lazy" decoding="async" style="max-width: 180px; width: 100%; height: auto; border-radius: var(--radius-lg); animation: floatGif 5s ease-in-out infinite 0.6s; box-shadow: var(--shadow-lg);">
           </div>
         </div>
         <form action="https://api.web3forms.com/submit" method="POST" class="contact__form fade-up" id="contact-form" style="animation-delay: 0.3s">
@@ -90,7 +90,7 @@ export function initContact() {
           </div>
           <div class="form-group">
             <textarea class="form-textarea" id="contact-message" name="message"
-                      placeholder="Tell me about your project... / Cuéntame sobre tu proyecto..." required></textarea>
+                       placeholder="Tell me about your project... / Cuéntame sobre tu proyecto..." required></textarea>
           </div>
           <button type="submit" class="btn btn--primary form-submit" id="contact-submit">
             <span class="lang-en">Send Message</span><span class="lang-es">Enviar Mensaje</span>
@@ -99,7 +99,7 @@ export function initContact() {
       </div>
       <div class="footer-stamp fade-up" style="width: 100%; display: flex; justify-content: center; margin-top: 80px; padding-top: 40px; border-top: 1px solid var(--border-color); animation-delay: 0.5s;">
         <a onclick="document.getElementById('projects').scrollIntoView({behavior: 'smooth'}); setTimeout(() => document.querySelector('.filter-btn[data-filter=\\'geometry-dash\\']').click(), 400);" style="display: inline-block;">
-          <img src="/images/logo%20-%20Geometry%20dash%20thumbnails.png" alt="Geometry Dash Thumbnails Stamp" style="max-width: 320px; opacity: 0.65; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); transition: opacity 0.3s ease, filter 0.3s ease; cursor: pointer;" onmouseover="this.style.opacity=1; this.style.filter='drop-shadow(0 8px 24px rgba(79, 195, 247, 0.3))';" onmouseout="this.style.opacity=0.65; this.style.filter='drop-shadow(0 4px 12px rgba(0,0,0,0.5))'">
+          <img src="/images/logo%20-%20Geometry%20dash%20thumbnails.webp" alt="Geometry Dash Thumbnails Stamp" width="320" height="86" style="max-width: min(320px, 90vw); width: 100%; height: auto; opacity: 0.65; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5)); transition: opacity 0.3s ease, filter 0.3s ease; cursor: pointer;" onmouseover="this.style.opacity=1; this.style.filter='drop-shadow(0 8px 24px rgba(79, 195, 247, 0.3))';" onmouseout="this.style.opacity=0.65; this.style.filter='drop-shadow(0 4px 12px rgba(0,0,0,0.5))'">
         </a>
       </div>
     </div>

@@ -5,20 +5,6 @@
 // Shared observer — exported so dynamic sections can observe new elements
 export let scrollObserver;
 
-const ANIMATED_SELECTOR = '.fade-up, .fade-in, .scale-in, .stagger-children, .card-spawn, .decode-text';
-
-/** Observe animated elements added after the initial page scan. */
-export function observeAnimations(root = document) {
-  if (!scrollObserver || !root) return;
-
-  const elements = [...root.querySelectorAll(ANIMATED_SELECTOR)];
-  if (root.matches?.(ANIMATED_SELECTOR)) elements.unshift(root);
-
-  elements.forEach((el) => {
-    if (!el.classList.contains('visible')) scrollObserver.observe(el);
-  });
-}
-
 export function initAnimations() {
   scrollObserver = new IntersectionObserver(
     (entries) => {
@@ -61,7 +47,9 @@ export function initAnimations() {
     { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
   );
 
-  observeAnimations(document);
+  document
+    .querySelectorAll('.fade-up, .fade-in, .scale-in, .stagger-children, .card-spawn, .decode-text')
+    .forEach((el) => scrollObserver.observe(el));
 }
 
 /**
