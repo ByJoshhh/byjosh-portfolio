@@ -33,7 +33,7 @@ export function initAbout() {
             <span class="stat-card__label"><span class="lang-en">Years Experience</span><span class="lang-es">Años de Experiencia</span></span>
           </div>
           <div class="stat-card fade-up" style="transition-delay: 150ms;">
-            <span class="stat-card__number" data-target="200" data-suffix="+">0+</span>
+            <span class="stat-card__number" data-target="140" data-suffix="+">0+</span>
             <span class="stat-card__label"><span class="lang-en">Projects Completed</span><span class="lang-es">Proyectos Completados</span></span>
           </div>
         </div>

@@ -51,7 +51,7 @@ export function initMusicPlayer() {
         </div>
         <div class="mp-info-row">
           <span class="mp-dot" id="mp-dot"></span>
-          <span class="mp-track-name" title="wiv — i love u">wiv — i love u</span>
+          <span class="mp-track-name" title="iffy iffy">iffy iffy</span>
           <span class="mp-time" id="mp-time">0:00</span>
         </div>
       </div>
@@ -93,7 +93,7 @@ export function initMusicPlayer() {
   const volSlider    = document.getElementById('mp-vol-slider');
 
   // ── 3. Audio & Web Audio Setup ──────────────────────────────────────────────
-  const audio = new Audio('/wiv-i-love-u.mp3');
+  const audio = new Audio('/iffy-iffy.mp3');
   audio.loop    = true;
   audio.volume  = 0.45;
   audio.preload = 'metadata';

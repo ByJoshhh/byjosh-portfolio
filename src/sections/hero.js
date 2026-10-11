@@ -169,8 +169,8 @@ export function initHero() {
         </div>
         <div class="subhero-metric-divider"></div>
         <div class="subhero-metric-item">
-          <span class="subhero-metric-num">200+</span>
-          <span class="subhero-metric-lbl"><span class="lang-en">Projects Delivered</span><span class="lang-es">Proyectos Realizados</span></span>
+          <span class="subhero-metric-num">140+</span>
+          <span class="subhero-metric-lbl"><span class="lang-en">Projects Completed</span><span class="lang-es">Proyectos Completados</span></span>
         </div>
         <div class="subhero-metric-divider"></div>
         <div class="subhero-metric-item">
