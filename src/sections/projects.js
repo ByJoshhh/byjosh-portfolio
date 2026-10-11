@@ -5,7 +5,8 @@ import { scrollObserver } from '../utils/animations.js';
 import { getDynamicProjects, getCategories } from '../utils/cmsDB.js';
 
 const STATIC_DATA = [
-    { title: 'Sunix TOP 2', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Thumbnail-TOP2.webp', bg: 'linear-gradient(135deg, #6b0a0a, #0a0a0a)', isNew: true },
+    { title: 'Sunix Grief', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Grief-THUMBNAIL.webp', bg: 'linear-gradient(135deg, #6b0a0a, #0a0a0a)', isNew: true },
+    { title: 'Sunix TOP 1 2016', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Thumbnail-TOP2.webp', bg: 'linear-gradient(135deg, #6b0a0a, #0a0a0a)', isNew: true },
     { title: 'The Golden - Viipr', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-Viipr.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
     { title: 'Still Home - G2', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/Still-Home-G2-clean.webp?v=2', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
     { title: 'BDD vs Chovy', cat: 'featured,esports,thumbnails', img: '/images/E-SPORTS/BPD-vs-Chovy.webp', bg: 'linear-gradient(135deg, #1a1a1a, #c8a800)', isNew: true },
@@ -169,11 +170,40 @@ export function renderProjectsGallery(section, data, categories) {
     return '<span class="lang-en">Digital Art</span><span class="lang-es">Arte Digital</span>';
   };
 
+  const getSpecsList = (cat) => {
+    if (cat.includes('thumbnails')) {
+      return [
+        { en: '4K Ultra-HD Resolution', es: 'Resolución 4K Ultra-HD' },
+        { en: 'Advanced Color Grading & CC', es: 'Color Grading y CC Avanzado' },
+        { en: 'High Click-Through Layout', es: 'Composición de Alto Impacto' }
+      ];
+    }
+    if (cat.includes('headers') || cat.includes('banners') || cat.includes('discord-banners')) {
+      return [
+        { en: 'Multi-Platform Ready (X/YT)', es: 'Dimensiones Multi-Plataforma' },
+        { en: 'Cinematic 3D & Anime Layering', es: 'Capas 3D y Anime Cinematográficas' },
+        { en: 'High-Fidelity Typography', es: 'Tipografía de Alta Fidelidad' }
+      ];
+    }
+    if (cat.includes('esports')) {
+      return [
+        { en: 'Pro Esports Org Standard', es: 'Estándar para Orgs de Esports' },
+        { en: 'Dynamic Match Branding', es: 'Branding Dinámico para Torneos' },
+        { en: 'Roster & Tournament Layouts', es: 'Layouts de Roster y Partidas' }
+      ];
+    }
+    return [
+      { en: 'High-Resolution Export', es: 'Exportación en Alta Resolución' },
+      { en: 'Custom Lighting & Textures', es: 'Iluminación y Texturas Custom' },
+      { en: '100% Original Composition', es: 'Composición 100% Original' }
+    ];
+  };
+
   section.innerHTML = `
     <div class="projects__container">
       <div class="section__header fade-up">
-        <span class="section__tag"><span class="lang-en">Work</span><span class="lang-es">Trabajo</span></span>
-        <h2 class="section__title"><span class="lang-en">Featured <span class="text-gradient">projects</span></span><span class="lang-es">Proyectos <span class="text-gradient">destacados</span></span></h2>
+        <span class="section__tag"><span class="lang-en">Work Catalogue</span><span class="lang-es">Catálogo de Obras</span></span>
+        <h2 class="section__title"><span class="lang-en">Featured <span class="text-gradient">Creations</span></span><span class="lang-es">Creaciones <span class="text-gradient">Destacadas</span></span></h2>
       </div>
       <div class="projects__filters fade-up">
         <button class="filter-btn filter-btn--active" data-filter="featured"><span class="lang-en">Featured</span><span class="lang-es">Destacados</span></button>
@@ -192,7 +222,6 @@ export function renderProjectsGallery(section, data, categories) {
             const projectCategories = String(p.cat || '');
             const projectTitle = escapeHtml(p.title);
             const fullUrl = safeProjectImageUrl(p.img);
-            // Use 720px optimized thumb for the grid card; lightbox retains original image
             const thumbUrl = fullUrl.startsWith('/images/') && !fullUrl.startsWith('/images/thumbs/')
               ? fullUrl.replace('/images/', '/images/thumbs/')
               : fullUrl;
@@ -200,19 +229,44 @@ export function renderProjectsGallery(section, data, categories) {
             const imgAttr = thumbUrl
               ? (isFeatured ? `src="${escapeHtml(thumbUrl)}"` : `data-src="${escapeHtml(thumbUrl)}"`)
               : '';
+            const specs = getSpecsList(projectCategories);
+
             return `
           <div class="project-card card-spawn" data-categories="${escapeHtml(projectCategories)}" data-full-image="${escapeHtml(fullUrl)}">
-            ${p.isNew ? '<div class="project-card__badge">NEW</div>' : ''}
-            <div class="project-card__image" style="background:${safeProjectBackground(p.bg)}">
-              <div class="skeleton-loader"></div>
-              <img ${imgAttr} data-full="${escapeHtml(fullUrl)}" alt="${projectTitle}" width="720" height="405" loading="lazy" decoding="async"
-                   onload="this.classList.add('loaded'); const skel = this.previousElementSibling; if(skel && skel.classList.contains('skeleton-loader')) skel.remove();"
-                   onerror="if(this.src !== this.dataset.full){ this.src = this.dataset.full; } else { this.closest('.project-card').style.display='none'; }">
+            <div class="project-card__top">
+              ${p.isNew ? '<div class="project-card__badge">NEW</div>' : ''}
+              <div class="project-card__image" style="background:${safeProjectBackground(p.bg)}">
+                <div class="skeleton-loader"></div>
+                <img ${imgAttr} data-full="${escapeHtml(fullUrl)}" alt="${projectTitle}" width="720" height="405" loading="lazy" decoding="async"
+                     onload="this.classList.add('loaded'); const skel = this.previousElementSibling; if(skel && skel.classList.contains('skeleton-loader')) skel.remove();"
+                     onerror="if(this.src !== this.dataset.full){ this.src = this.dataset.full; } else { this.closest('.project-card').style.display='none'; }">
+              </div>
             </div>
-            <div class="project-card__overlay">
+            
+            <div class="project-card__content">
+              <div class="project-card__meta">
+                <span class="project-card__category-tag">${getCategoryLabel(projectCategories)}</span>
+              </div>
+              
               <h3 class="project-card__title">${projectTitle}</h3>
-              <p class="project-card__category">${getCategoryLabel(projectCategories)}</p>
-              <span class="project-card__link"><span class="lang-en">View Full Size</span><span class="lang-es">Ver en Grande</span> →</span>
+              
+              <ul class="project-card__specs">
+                ${specs.map(s => `
+                  <li>
+                    <svg viewBox="0 0 20 20" fill="currentColor" width="13" height="13" class="project-card__spec-icon">
+                      <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span><span class="lang-en">${s.en}</span><span class="lang-es">${s.es}</span></span>
+                  </li>
+                `).join('')}
+              </ul>
+
+              <div class="project-card__footer">
+                <span class="project-card__action-btn">
+                  <span class="lang-en">View Fullscreen</span><span class="lang-es">Ver en Grande</span>
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+                </span>
+              </div>
             </div>
           </div>`;
           }

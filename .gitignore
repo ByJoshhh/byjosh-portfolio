@@ -3,3 +3,9 @@ dist/
 .env
 .env.*
 !.env.example
+*.psd
+.DS_Store
+
+# Scratch files in root
+/*.png
+/*.gif

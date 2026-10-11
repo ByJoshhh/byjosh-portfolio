@@ -1,13 +1,12 @@
-/**
- * Navbar — logo uses plain text + accent color (no gradient text).
- */
+import { setupGlitchDecode, runGlitchOnElement } from '../utils/glitch.js';
+
 export function initNavbar() {
   const navbar = document.getElementById('navbar');
   if (!navbar) return;
 
   navbar.innerHTML = `
     <div class="navbar__container">
-      <a href="#" class="navbar__logo">By<span>Josh.</span></a>
+      <a href="#" class="navbar__logo" id="navbar-logo">By<span class="text-gradient decode-text" data-text="Josh.">Josh.</span></a>
       <div class="navbar__menu" id="nav-menu">
         <a href="#projects" class="navbar__link"><span class="lang-en">Work</span><span class="lang-es">Trabajo</span></a>
         <a href="#about" class="navbar__link"><span class="lang-en">About</span><span class="lang-es">Sobre mí</span></a>
@@ -22,12 +21,25 @@ export function initNavbar() {
         <button id="lang-toggle" class="btn btn--outline" style="padding: 6px 14px; font-size: 0.75rem;">
           <span class="lang-en">ES</span><span class="lang-es">EN</span>
         </button>
+        <a href="#contact" class="btn btn--primary" style="padding: 7px 18px; font-size: 0.78rem; font-weight: 700; border-radius: var(--radius-full); margin-left: 2px;">
+          <span class="lang-en">Commission</span><span class="lang-es">Cotizar</span>
+        </a>
       </div>
       <button class="navbar__toggle" id="nav-toggle" aria-label="Toggle menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   `;
+
+  setupGlitchDecode(navbar);
+
+  const logoLink = navbar.querySelector('#navbar-logo');
+  const logoSpan = navbar.querySelector('#navbar-logo .decode-text');
+  if (logoLink && logoSpan) {
+    logoLink.addEventListener('mouseenter', () => {
+      runGlitchOnElement(logoSpan);
+    });
+  }
 
   // Throttled scroll handler — runs at most once per animation frame
   let scrollTicking = false;

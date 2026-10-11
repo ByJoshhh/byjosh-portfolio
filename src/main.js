@@ -22,6 +22,12 @@ import { initAnimations, initSmoothScroll } from './utils/animations.js';
 import { animateCounters } from './utils/counter.js';
 import { initMusicPlayer } from './components/musicPlayer.js';
 
+// Force manual scroll restoration so browsers never load offset/scrolled down
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+window.scrollTo(0, 0);
+
 // --- Preloader Logic ---
 function initPreloader() {
   const preloader = document.getElementById('preloader');
@@ -49,6 +55,7 @@ function initPreloader() {
     setTimeout(() => {
       preloader.classList.add('fade-out');
       document.body.classList.add('loaded');
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       
       // Start intersection animations and counters only after preloader is done
       initAnimations();
@@ -57,7 +64,12 @@ function initPreloader() {
   });
 }
 
+window.addEventListener('beforeunload', () => {
+  window.scrollTo(0, 0);
+});
+
 document.addEventListener('DOMContentLoaded', () => {
+  window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   initPreloader();
   // 5 — Prevent Image Theft
   document.addEventListener('contextmenu', (e) => {
