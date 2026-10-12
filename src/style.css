@@ -470,6 +470,22 @@ body:not(.loaded) .reveal-text__inner {
   border: 1px solid rgba(74, 222, 128, 0.14);
 }
 
+[data-theme="light"] .badge--primary {
+  background: rgba(2, 132, 199, 0.08);
+  color: #0284c7;
+  border-color: rgba(2, 132, 199, 0.2);
+}
+[data-theme="light"] .badge--secondary {
+  background: rgba(100, 116, 139, 0.08);
+  color: #475569;
+  border-color: rgba(100, 116, 139, 0.2);
+}
+[data-theme="light"] .badge--accent {
+  background: rgba(22, 163, 74, 0.08);
+  color: #16a34a;
+  border-color: rgba(22, 163, 74, 0.2);
+}
+
 /* --- Language Utils --- */
 body:not(.lang-es) .lang-es { display: none !important; }
 body.lang-es .lang-en { display: none !important; }
@@ -1160,7 +1176,7 @@ body.lang-es .lang-en { display: none !important; }
   }
 
   .wooting-hero__card {
-    padding: 28px 16px 56px;
+    padding: 28px 16px 28px;
     border-radius: 20px;
     width: 100%;
     max-width: 100%;
@@ -1197,11 +1213,28 @@ body.lang-es .lang-en { display: none !important; }
     margin-bottom: 20px;
     max-width: 100%;
   }
-  .wooting-hero__controls {
-    bottom: 18px;
-    right: 50%;
-    transform: translateX(50%);
+  .wooting-hero__actions {
     gap: 10px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn--wooting {
+    padding: 11px 22px;
+    font-size: 0.86rem;
+  }
+  .wooting-hero__controls {
+    position: relative;
+    bottom: auto;
+    right: auto;
+    left: auto;
+    transform: none;
+    margin-top: 22px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    z-index: 5;
   }
   .wooting-hero__dots {
     padding: 7px 14px;
@@ -1425,6 +1458,8 @@ body.lang-es .lang-en { display: none !important; }
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 12px;
+  position: relative;
+  z-index: 2;
 }
 
 .about__stats {
@@ -2148,7 +2183,7 @@ body.lang-es .lang-en { display: none !important; }
     box-sizing: border-box;
   }
   .wooting-hero__card {
-    padding: 24px 12px 52px;
+    padding: 24px 12px 24px;
     border-radius: 16px;
   }
   .wooting-hero__stage {
@@ -2367,7 +2402,7 @@ body.lang-es .lang-en { display: none !important; }
 
 /* --- Sakura Branch Background Decorations (Undeformed & Atmospheric) --- */
 .sakura-decor {
-  position: fixed;
+  position: absolute;
   pointer-events: none;
   z-index: 0;
   height: auto;
@@ -2381,38 +2416,40 @@ body.lang-es .lang-en { display: none !important; }
   top: -10px;
   left: -15px;
   width: clamp(340px, 38vw, 560px);
-  opacity: 0.38;
+  opacity: 0.28;
 }
 
 .sakura-decor--top-right {
   top: -20px;
   right: -25px;
   width: clamp(380px, 44vw, 680px);
-  opacity: 0.22;
+  opacity: 0.18;
   transform: scaleX(-1);
 }
 
 [data-theme='dark'] .sakura-decor--top-left {
-  opacity: 0.30;
+  opacity: 0.25;
 }
 [data-theme='dark'] .sakura-decor--top-right {
-  opacity: 0.18;
+  opacity: 0.15;
 }
 
 [data-theme='light'] .sakura-decor--top-left {
-  opacity: 0.48;
+  opacity: 0.22;
 }
 [data-theme='light'] .sakura-decor--top-right {
-  opacity: 0.28;
+  opacity: 0.14;
 }
 
 @media (max-width: 768px) {
   .sakura-decor--top-right {
     display: none;
   }
-  .sakura-decor--top-left {
-    width: 260px;
-    opacity: 0.22;
+  .sakura-decor--top-left,
+  [data-theme='light'] .sakura-decor--top-left,
+  [data-theme='dark'] .sakura-decor--top-left {
+    width: clamp(190px, 42vw, 240px);
+    opacity: 0.18;
   }
 }
 
