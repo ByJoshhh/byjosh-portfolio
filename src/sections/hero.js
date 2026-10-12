@@ -19,8 +19,8 @@ const HERO_SLIDES = [
     alt: 'Sunix TOP 1 2016 Geometry Dash Artwork',
     isHaimiya: false,
     duration: 5000,
-    titleEn: 'Geometry Dash &bull; <span class="decode-text" data-text="Sunix TOP 1 2016" style="white-space: nowrap">Sunix TOP 1 2016</span>',
-    titleEs: 'Geometry Dash &bull; <span class="decode-text" data-text="Sunix TOP 1 2016" style="white-space: nowrap">Sunix TOP 1 2016</span>',
+    titleEn: 'Geometry Dash &bull; <span class="decode-text" data-text="Sunix TOP 1 2016">Sunix TOP 1 2016</span>',
+    titleEs: 'Geometry Dash &bull; <span class="decode-text" data-text="Sunix TOP 1 2016">Sunix TOP 1 2016</span>',
     subEn: 'High-CTR thumbnail composition crafted for top recurring client Sunix',
     subEs: 'Miniatura de alto impacto diseñada para el cliente frecuente y estrella Sunix'
   },
@@ -30,8 +30,8 @@ const HERO_SLIDES = [
     alt: 'Sunix Grief Geometry Dash Thumbnail',
     isHaimiya: false,
     duration: 5000,
-    titleEn: 'Grief &bull; <span class="decode-text" data-text="Sunix Attempts ????" style="white-space: nowrap">Sunix Attempts ????</span>',
-    titleEs: 'Grief &bull; <span class="decode-text" data-text="Sunix Attempts ????" style="white-space: nowrap">Sunix Attempts ????</span>',
+    titleEn: 'Grief &bull; <span class="decode-text" data-text="Sunix Attempts ????">Sunix Attempts ????</span>',
+    titleEs: 'Grief &bull; <span class="decode-text" data-text="Sunix Attempts ????">Sunix Attempts ????</span>',
     subEn: 'Extreme demon thumbnail commission crafted for Sunix',
     subEs: 'Miniatura de extreme demon diseñada para Sunix'
   },
