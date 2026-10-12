@@ -92,9 +92,16 @@ export async function getPricingPlans() {
     }
   }
 
+  return getCachedPricingPlans();
+}
+
+export function getCachedPricingPlans() {
   const cached = safeStorage.getItem('byjosh_pricing_cache');
   if (cached) {
-    try { return JSON.parse(cached); } catch (e) {}
+    try {
+      const parsed = JSON.parse(cached);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch (e) {}
   }
   return DEFAULT_PRICING_PLANS;
 }

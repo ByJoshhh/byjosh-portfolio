@@ -190,21 +190,27 @@ export function initHero() {
           <!-- Sunix prominent VIP emphasis (Josh's frequent client & GD Legend prodigy) -->
           <div class="wooting-client-pill wooting-client-pill--vip">
             <span class="wooting-client-pill__name">
-              Sunix <span class="wooting-client-pill__tag-vip">(Legend GD Player)</span>
+              Sunix <span class="wooting-client-pill__tag-vip"><span class="lang-en">(Legend GD Player)</span><span class="lang-es">(Leyenda GD)</span></span>
             </span>
           </div>
 
-          <!-- Static frequent clients requested by user (Helpegasus removed) -->
+          <!-- Necrum: Top / Best Client highlight -->
+          <div class="wooting-client-pill wooting-client-pill--vip">
+            <span class="wooting-client-pill__name">
+              Necrum <span class="wooting-client-pill__tag-vip"><span class="lang-en">(Top Client)</span><span class="lang-es">(Mejor Cliente)</span></span>
+            </span>
+          </div>
+
+          <!-- Jankos: LoL Legend highlight -->
+          <div class="wooting-client-pill wooting-client-pill--vip">
+            <span class="wooting-client-pill__name">
+              Jankos <span class="wooting-client-pill__tag-vip"><span class="lang-en">(LoL Legend)</span><span class="lang-es">(Leyenda LoL)</span></span>
+            </span>
+          </div>
+
+          <!-- Other valued clients -->
           <div class="wooting-client-pill">
             <span class="wooting-client-pill__name">Viipr</span>
-          </div>
-
-          <div class="wooting-client-pill">
-            <span class="wooting-client-pill__name">Necrum</span>
-          </div>
-
-          <div class="wooting-client-pill">
-            <span class="wooting-client-pill__name">Jankos</span>
           </div>
 
           <div class="wooting-client-pill">

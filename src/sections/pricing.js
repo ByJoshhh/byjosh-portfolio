@@ -1,7 +1,8 @@
 /**
  * Pricing section — dynamic honest pricing cards connected to Supabase CMS.
  */
-import { getPricingPlans } from '../utils/cmsDB.js';
+import { getPricingPlans, getCachedPricingPlans } from '../utils/cmsDB.js';
+import { scrollObserver } from '../utils/animations.js';
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -12,14 +13,24 @@ function escapeHtml(value) {
     .replace(/'/g, '&#039;');
 }
 
-export async function initPricing() {
+export function initPricing() {
   const section = document.getElementById('pricing');
   if (!section) return;
 
-  const plans = await getPricingPlans();
-  renderPricing(section, plans);
+  // 1. Immediate synchronous render — guarantees elements and slogans exist on DOMContentLoaded
+  const initialPlans = getCachedPricingPlans();
+  renderPricing(section, initialPlans);
 
-  // Listen for live pricing updates from admin modal
+  // 2. Background fetch for latest CMS pricing plans from Supabase
+  getPricingPlans().then((freshPlans) => {
+    if (freshPlans && Array.isArray(freshPlans) && freshPlans.length > 0) {
+      renderPricing(section, freshPlans);
+    }
+  }).catch((err) => {
+    console.warn('Background getPricingPlans error:', err);
+  });
+
+  // 3. Listen for live pricing updates from admin modal
   window.addEventListener('byjosh:pricing_updated', async () => {
     const updatedPlans = await getPricingPlans();
     renderPricing(section, updatedPlans);
@@ -98,4 +109,19 @@ export function renderPricing(section, plans) {
 
     </div>
   `;
+
+  // Ensure all newly rendered elements are registered with scrollObserver or revealed if in viewport
+  if (scrollObserver) {
+    section.querySelectorAll('.fade-up, .fade-in, .scale-in, .stagger-children, .decode-text').forEach((el) => {
+      scrollObserver.observe(el);
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 100 && rect.bottom > -100) {
+        el.classList.add('visible');
+      }
+    });
+  } else if (document.body.classList.contains('loaded')) {
+    section.querySelectorAll('.fade-up, .stagger-children').forEach((el) => {
+      el.classList.add('visible');
+    });
+  }
 }

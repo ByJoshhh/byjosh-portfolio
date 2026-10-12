@@ -44,12 +44,49 @@ export function initAnimations() {
         }
       });
     },
-    { threshold: 0.08, rootMargin: '0px 0px -20px 0px' }
+    { threshold: 0.05, rootMargin: '60px 0px 60px 0px' }
   );
 
-  document
-    .querySelectorAll('.fade-up, .fade-in, .scale-in, .stagger-children, .card-spawn, .decode-text')
-    .forEach((el) => scrollObserver.observe(el));
+  const selector = '.fade-up, .fade-in, .scale-in, .stagger-children, .card-spawn, .decode-text';
+
+  // Initial observation of all currently present elements
+  document.querySelectorAll(selector).forEach((el) => {
+    scrollObserver.observe(el);
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      el.classList.add('visible');
+    }
+  });
+
+  // Automatically observe any dynamic elements injected into the DOM (e.g., pricing, reviews, CMS updates)
+  const mutationObserver = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      for (const node of mutation.addedNodes) {
+        if (node.nodeType === 1) {
+          if (node.matches && node.matches(selector)) {
+            if (!node.classList.contains('visible')) scrollObserver.observe(node);
+          }
+          if (node.querySelectorAll) {
+            node.querySelectorAll(selector).forEach((el) => {
+              if (!el.classList.contains('visible')) scrollObserver.observe(el);
+            });
+          }
+        }
+      }
+    }
+  });
+
+  mutationObserver.observe(document.body, { childList: true, subtree: true });
+}
+
+export function observeElements(root = document) {
+  if (!scrollObserver) return;
+  const selector = '.fade-up, .fade-in, .scale-in, .stagger-children, .card-spawn, .decode-text';
+  root.querySelectorAll(selector).forEach((el) => {
+    if (!el.classList.contains('visible')) {
+      scrollObserver.observe(el);
+    }
+  });
 }
 
 /**

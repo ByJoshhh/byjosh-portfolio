@@ -46,8 +46,7 @@ function initPreloader() {
     text.innerText = `${Math.floor(progress)}%`;
   }, 150);
 
-  // When all images and resources actually finish loading
-  window.addEventListener('load', () => {
+  const finishLoading = () => {
     clearInterval(fakeLoader);
     bar.style.width = '100%';
     text.innerText = '100%';
@@ -57,11 +56,25 @@ function initPreloader() {
       document.body.classList.add('loaded');
       window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
       
-      // Start intersection animations and counters only after preloader is done
+      // Start intersection animations and counters
       initAnimations();
       animateCounters();
-    }, 400); // small delay to let user see 100%
-  });
+    }, 250);
+  };
+
+  // When all images and resources actually finish loading
+  if (document.readyState === 'complete') {
+    finishLoading();
+  } else {
+    window.addEventListener('load', finishLoading, { once: true });
+  }
+
+  // Safety fallback for ultra-fast reloads or hanging network assets
+  setTimeout(() => {
+    if (!document.body.classList.contains('loaded')) {
+      finishLoading();
+    }
+  }, 2000);
 }
 
 window.addEventListener('beforeunload', () => {
