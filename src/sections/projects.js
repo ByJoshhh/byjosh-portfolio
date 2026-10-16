@@ -5,6 +5,7 @@ import { scrollObserver } from '../utils/animations.js';
 import { getDynamicProjects, getCategories } from '../utils/cmsDB.js';
 
 const STATIC_DATA = [
+    { title: 'Cejitas • Alice Madness Returns', cat: 'featured,banners', img: '/images/Banners/Cejitas-Alice-Madness-Returns.webp', bg: 'linear-gradient(135deg, #0d1b2a, #1b263b)', isNew: true },
     { title: 'Sunix Grief', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Grief-THUMBNAIL.webp', bg: 'linear-gradient(135deg, #6b0a0a, #0a0a0a)', isNew: true },
     { title: 'Sunix TOP 1 2016', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/Sunix-Thumbnail-TOP2.webp', bg: 'linear-gradient(135deg, #6b0a0a, #0a0a0a)', isNew: true },
     { title: 'The Golden - Viipr', cat: 'featured,geometry-dash,thumbnails', img: '/images/GD%20thumbnails/The-Golden-Viipr.webp', bg: 'linear-gradient(135deg, #1b4e2d, #0d140b)', isNew: true },
